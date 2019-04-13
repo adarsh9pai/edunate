@@ -35,7 +35,7 @@ const theme = createMuiTheme({
     }
   },
   typography: {
-    fontFamily: ['"Economics"'].join(','),
+    fontFamily: "Economica",
     useNextVariants: true,
   }
 });

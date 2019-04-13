@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper, Grid, Fab } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Typography, Button, Paper, Grid, Fab } from '@material-ui/core';
+import { AccountCircle, Menu } from '@material-ui/icons';
 import MenuAppBar from '../Components/appBar';
-import defaultStyles from '../Theme/styles';
 
 const styles = theme => ({
-    ...defaultStyles(theme),
+    root: {
+        width: '100%',
+    },
     logo: {
         marginLeft: '48%',
         height: 100,
@@ -15,29 +17,24 @@ const styles = theme => ({
     },
     fab: {
         backgroundColor: '#FFFC00',
+        color: '#fff',
         fontWeight: 'bold',
         margin: 'auto 0',
         marginLeft: '45%',
+
     },
     grow: {
         flexGrow: 1,
     },
 });
 
-class Login extends React.Component {
+class Homepage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
 
         }
-    }
-
-    handleSnapChatLogin = () => {
-        // Call Snapchat API stuff
-
-        // Navigate on success to account creation or homepage based if they have logged in before
-        this.props.history.push('/homepage');
     }
 
     renderLogin = () => {
@@ -47,7 +44,7 @@ class Login extends React.Component {
             <Paper>
                 <img src='logo.png' alt='Edunote Logo' className={classes.logo} />
                 <Grid>
-                    <Fab variant="extended" aria-label="Delete" className={classes.fab} onClick={this.handleSnapChatLogin}>
+                    <Fab variant="extended" aria-label="Delete" className={classes.fab}>
                         Login with Snapchat
                 </Fab>
                 </Grid>
@@ -59,18 +56,16 @@ class Login extends React.Component {
         const { classes } = this.props;
 
         return (
-            <div>
-                <MenuAppBar title='edunate' />
-                <div className={classes.root}>
-                    {this.renderLogin()}
-                </div>
+            <div className={classes.root}>
+                <MenuAppBar title='Homepage' />
+                {this.renderLogin()}
             </div>
         );
     }
 }
 
-Login.propTypes = {
+Homepage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(Homepage);

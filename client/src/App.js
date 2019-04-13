@@ -3,7 +3,7 @@ import theme from './Theme/theme';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import { MuiThemeProvider } from '@material-ui/core';
-import Login from './Login';
+import Navigation from './routes';
 
 
 class App extends Component {
@@ -11,7 +11,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <MuiThemeProvider theme={theme}>
-          <Login />
+          {Navigation}
         </MuiThemeProvider>
       </BrowserRouter>
     );
