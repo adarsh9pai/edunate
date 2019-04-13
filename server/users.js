@@ -2,6 +2,9 @@ const express = require('express');
 const users = express.Router();
 const Firestore = require('@google-cloud/firestore');
 
+
+
+
 let fStore = new Firestore();
 
 users.get('/',(request, response)=>{
@@ -9,32 +12,54 @@ users.get('/',(request, response)=>{
 })
 
 users.get('/doesUserExist',(request, response)=>{
-    const userDocument = fStore.doc('Users/'+request.query.displayName);
-    let doc = userDocument.get();
-    if(Object.keys(doc).length == 0){
-        response.json({message : false});
-    }
-    else{
-        response.json({
-            message : true
-        })
-    }
+    let document = fStore.collection("Users").doc(request.query.displayName);
+    document.get().then((user)=>{
+        if(user.exists){
+            response.json({message : true});
+        }
+        else{
+            response.json({message : false});
+        }
+    }).catch((error)=>{
+        response.json({message : "Error. Try again later."});
+    })
 })
 
 users.get('/getUser',(request, response)=>{
-    const userDocument = fStore.doc('Users/'+request.query.displayName);
-    let doc = userDocument.get();
-    if(Object.keys(doc).length == 0){
-        response.json({message : "user does not exist."});
-    }
-    else{
-        response.json({
-            message : "success",
-            user : doc
-        })
-    }
+    let document = fStore.collection("Users").doc(request.query.displayName);
+    document.get().then((user)=>{
+        if(user.exists){
+            response.json({message : "success",
+        user : user.data()});
+        }
+        else{
+            response.json({message : "Failure. User not found."});
+        }
+    }).catch((error)=>{
+        response.json({message : "Error. Try again later."});
+    })    
 })
 
+users.post('/addUser', (request, response)=>{
+    let documentObject = {
+        displayName : request.body.displayName,
+        bitmoji : request.body.bitmoji,
+        fullName : request.body.fullName,
+        age : request.body.age,
+        university : request.body.university,
+        major : request.body.major,
+        classification : request.body.classification,
+        city : request.body.city 
+    };
+    const document = fStore.doc('Users/' + documentObject.displayName).set(documentObject)
+    .then(() => {
+        response.json({message : "Success",
+    description : "user has been added."})
+    })
+    .catch((error)=>{
+        response.json({message : "Failure. Try again later."});
+    });
+})
 
 
 module.exports = users;
