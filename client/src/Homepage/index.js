@@ -5,28 +5,12 @@ import { AppBar, Toolbar, IconButton, Typography, Button, Paper, Grid, Fab } fro
 import { AccountCircle, Menu } from '@material-ui/icons';
 import MenuAppBar from '../Components/appBar';
 import Post from './searchCards';
+import defaultStyles from '../Theme/styles';
+
+
 
 const styles = theme => ({
-    root: {
-        width: '100%',
-    },
-    logo: {
-        marginLeft: '48%',
-        height: 100,
-        width: 100,
-        margin: 'auto 0',
-    },
-    fab: {
-        backgroundColor: '#FFFC00',
-        color: '#fff',
-        fontWeight: 'bold',
-        margin: 'auto 0',
-        marginLeft: '45%',
-
-    },
-    grow: {
-        flexGrow: 1,
-    },
+    ...defaultStyles(theme),
 });
 
 class Homepage extends React.Component {
@@ -57,10 +41,11 @@ class Homepage extends React.Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div >
                 <MenuAppBar title='Homepage' />
-                {this.renderLogin()}
-                <Post />
+                <div className={classes.root}>
+                    <Post />
+                </div>   
             </div>
         );
     }
