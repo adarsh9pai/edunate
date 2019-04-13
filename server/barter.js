@@ -1,8 +1,9 @@
 const express = require('express');
 const barter = express.Router();
+const Firestore = require('@google-cloud/firestore');
 
-barter.get('/',(request, response)=>{
-    response.json({message : "barter GET Endpoint"});
-})
+let fStore = new Firestore();
 
-module.exports = barter;
+barter.get('/', (request, response) => {
+    response.json({message: "barter GET Endpoint"});
+});
