@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import theme from './Theme/theme';
-import Login from './Login/login';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import { MuiThemeProvider } from '@material-ui/core';
+import Login from './Login';
+
 
 class App extends Component {
   render() {
