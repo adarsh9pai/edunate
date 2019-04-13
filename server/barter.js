@@ -7,3 +7,5 @@ let fStore = new Firestore();
 barter.get('/', (request, response) => {
     response.json({message: "barter GET Endpoint"});
 });
+
+module.exports = barter;
