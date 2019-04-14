@@ -41,12 +41,14 @@ barter.post('/add', (request, response) =>
 
 barter.post('/update', (request, response) => {
     
-    //user
-    //receive
-    //request
-    //promise
-    //hashtags
-
+     let updatedBarter = request.body;
+     let document = fStore.collection("Barter").doc(updatedBarter.user.displayName + "-" + updatedBarter.id);
+     document.set(updatedBarter).then(() => {
+	response.json({message: "success"});
+     })
+     .catch((error) => {
+	 response.json({message: "Error. Try again later."});
+     });
     
 });
 
@@ -58,7 +60,7 @@ barter.get('/get', (request, response) => {
         let document = fStore.collection("Barter").doc(request.query.displayName + "-" + request.query.id);
         document.get().then((barter) => {
             if(barter.exists)
-                response.json(barter);
+                response.json(barter.data());
             else
                 response.json({message: "instance of barter does not exist."})
         }).catch((error) =>{
@@ -67,22 +69,20 @@ barter.get('/get', (request, response) => {
 });
 
 /*
-    needs request.body.displayName
+    needs request.displayName
 */
 barter.get('/getall', (request, response) => {
 
     let collection = fStore.collection("Barter");
     let result = [];
-
+	
     collection.get().then((barters) => {
-        
-        for(let i = 0; i < barters.length; i++)
-        {
-            if(users[i]['user']['displayName'] == request.body.displayName)
-            {
-                result.append(baters[i]);
-            }
-        }
+        barters.forEach((doc) => {
+		if(doc.data().user['displayName'] == request.query.displayName)
+		{
+			result.push(doc.data());
+		}
+	});
 
         response.json({result});
 
