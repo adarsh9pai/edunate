@@ -13,10 +13,10 @@ import SearchBar from '../Components/searchBar';
 import StackGrid from 'react-stack-grid';
 import { getAllBarters, getTrendingHashtags, addBarter, Barter, updateBarter } from '../API/Barter';
 import { connect } from 'react-redux';
-// import { InlineDatePicker } from 'material-ui-pickers';
 import SnackBar from '../Components/snackbar';
 import { Request } from '../API/Request';
 import Payment from '../Payment/Payment';
+import { getUser } from '../API/User';
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -47,6 +47,7 @@ class Homepage extends React.Component {
             selectedPost: null,
             selectedTag: '',
             selectedPayment: null,
+            user: null,
 
             confirmation: {
                 variant: null,
@@ -57,7 +58,11 @@ class Homepage extends React.Component {
     }
 
     componentDidMount = async () => {
+        const { userID } = this.props;
+
         this.fetchAll();
+        const user = await getUser(userID);
+        this.setState({ user });
     }
 
     fetchAll = async () => {
@@ -90,10 +95,10 @@ class Homepage extends React.Component {
     }
 
     handlePost = () => {
-        const { userID: displayName } = this.props;
+        const { user } = this.state;
 
         addBarter(new Barter({
-            user: { displayName },
+            user,
             request: new Request(this.state),
             ...this.state,
         }))
