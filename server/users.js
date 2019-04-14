@@ -40,7 +40,7 @@ users.get('/getUser',(request, response)=>{
     })    
 })
 
-users.post('/addUser', (request, response)=>{
+users.post('/add', (request, response)=>{
     let documentObject = {
         displayName : request.body.displayName,
         bitmoji : request.body.bitmoji,
