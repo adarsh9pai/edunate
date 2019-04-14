@@ -19,7 +19,7 @@ export class Barter {
 export const getAllBarters = () => {
     return new Promise((resolve, reject) => {
         API.get(`/barter/getall`)
-            .then(res => res.data)
+            .then(res => res.data.result)
             .then(barters => resolve(barters.map(barter => new Barter(barter))))
             .catch(err => reject(err));
     })

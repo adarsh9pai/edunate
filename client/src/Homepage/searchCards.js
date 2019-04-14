@@ -91,6 +91,8 @@ class Post extends React.Component {
     const { classes, post, bitmoji, displayName } = this.props;
     const { expanded } = this.state;
 
+    console.log(post);
+
     return (
       <Badge
         className={classes.badge}
