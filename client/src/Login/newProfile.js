@@ -1,124 +1,159 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, IconButton, Typography, Button, Paper, Grid, Fab } from '@material-ui/core';
-import { AccountCircle, Menu } from '@material-ui/icons';
+import { Button, Grid } from '@material-ui/core';
 import MenuAppBar from '../Components/appBar';
 import defaultStyles from '../Theme/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import FaceIcon from '@material-ui/icons/Face';
-import DoneIcon from '@material-ui/icons/Done';
-
+import { connect } from 'react-redux';
+import { newUser, login } from '../Actions/loginActions';
+import { User } from '../API/User';
 
 const styles = theme => ({
-    ...defaultStyles(theme),
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-      },
-      chip: {
-        margin: theme.spacing.unit,
-       },
-      chipLabel: {
-          fontSize: '1.5rem',
-      },
+  ...defaultStyles(theme),
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+  chip: {
+    margin: theme.spacing.unit,
+  },
+  chipLabel: {
+    fontSize: '1.5rem',
+  },
+  centerDiv: {
+    margin: '0 auto',
+    width: '10%',
+    marginTop: 64 + theme.spacing.unit * 3,
+  },
 });
 
 class Profile extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-
-        }
+    this.state = {
+      classification: '',
     }
+  }
 
-    //continues to profile page when continue is pressed
-    handleChange = name => event => {
-    
-    
-    };
+  //continues to profile page when continue is pressed
+  handleTextChange = e => {
+    this.setState({ [e.target.id]: e.target.value });
+  };
 
-    //changes the text entry when text is entered
-    handleChange = name => event => {
-      this.setState({ [name]: event.target.value });
-    };
+  handleSelectChange = id => e => {
+    this.setState({ [id]: e.target.value });
+  }
 
-    render() {
-        const { classes } = this.props;
+  handleContinueClick = () => {
+    const { newUser, login, userID: displayName } = this.props;
 
-        return (
-            <div>
-              <MenuAppBar title='Profile' />
-               <div className={classes.root}> 
+    newUser(new User({...this.state, displayName}));
+    login(new User({...this.state, displayName}));
+    this.props.history.push('./homepage');
+  }
 
-                {/* Insert bitmoji in place of the typograph */}
+  render() {
+    const { classes, bitmoji } = this.props;
+    const { classification } = this.state;
 
+    return (
+      <div>
+        <MenuAppBar title='Profile' />
+        <div className={classes.root}>
 
-                <Typography>bitmoji goes here</Typography>
-                 
-                 <Grid container >
-                   
-                    {/* entry boxes for new profile page */}
+          <div className={classes.centerDiv}>
+            <img src={bitmoji} />
+          </div>
 
-                    <Grid item xs={12} sm={1} className={classes.formGridItem}></Grid>                   
-                    <Grid item xs={12} sm={3} className={classes.formGridItem}>   
-                    <TextField
-                        id="standard-number"
-                        label="Age"
-                        value={this.state.age}
-                        onChange={this.handleChange('Age')}
-                        type="number"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        fullWidth
-                        />
-                     </Grid>
-                   
-                    <Grid item xs={12} sm={4} className={classes.formGridItem}>   
-                    <TextField
-                        id="standard-full-width"
-                        label="University"
-                        placeholder=""
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        fullWidth
-                        />
-                     </Grid>
-                    
-                    <Grid item xs={12} sm={3} className={classes.formGridItem}>   
-                    <TextField
-                        id="standard-full-width"
-                        label="City"
-                        placeholder=""
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        fullWidth
-                        />
-                     </Grid>
-                     <Grid item xs={12} sm={1} className={classes.formGridItem}></Grid>       
-                   
-                    {/* Logout button, at the end of the page */}
+          <Grid container >
 
-                    <Grid item xs={12} sm={10} className={classes.formGridItem}></Grid>                         
-                    <Grid item xs={12} sm={2} className={classes.formGridItem}>
-                      <Button onClick={this.onContinueClick} >Coninue</Button>
-                    </Grid>
-                   </Grid>
-                </div>
-            </div>
-        );
-    }
+            {/* entry boxes for new profile page */}
+
+            <Grid item xs={12} sm={4} className={classes.formGridItem}>
+              <TextField
+                id="fullName"
+                label="Full Name"
+                onBlur={this.handleTextChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} className={classes.formGridItem}>
+              <TextField
+                id="age"
+                label="Age"
+                onBlur={this.handleTextChange}
+                type="number"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4} className={classes.formGridItem}>
+              <TextField
+                id="university"
+                label="University"
+                onBlur={this.handleTextChange}
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4} className={classes.formGridItem}>
+              <TextField
+                id="location"
+                label="City"
+                onBlur={this.handleTextChange}
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4} className={classes.formGridItem}>
+              <TextField id='classification' label="Classification" value={classification} onChange={this.handleSelectChange('classification')} fullWidth select
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+              >
+                <MenuItem value='Freshman'>Freshman</MenuItem>
+                <MenuItem value='Sophomore'>Sophomore</MenuItem>
+                <MenuItem value='Junior'>Junior</MenuItem>
+                <MenuItem value='Senior'>Senior</MenuItem>
+                <MenuItem value='Master Student'>Master Student</MenuItem>
+                <MenuItem value='PhD Candidate'>PhD Candidate</MenuItem>
+              </TextField>
+            </Grid>
+
+            <Grid item xs={12} sm={4} className={classes.formGridItem}>
+              <TextField
+                id="major"
+                label="Major"
+                onBlur={this.handleTextChange}
+                fullWidth
+              />
+            </Grid>
+
+            {/* Logout button, at the end of the page */}
+
+            <Grid item xs={12} sm={10} className={classes.formGridItem}></Grid>
+            <Grid item xs={12} sm={2} className={classes.formGridItem}>
+              <Button color='primary' variant='contained' onClick={this.handleContinueClick}>Continue</Button>
+            </Grid>
+          </Grid>
+        </div>
+      </div>
+    );
+  }
 }
 
 Profile.propTypes = {
-    classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Profile);
+const mapStateToProps = state => ({
+  bitmoji: state.login.bitmoji,
+  userID: state.login.userID,
+})
+
+export default connect(mapStateToProps, { newUser, login })(withStyles(styles)(Profile));

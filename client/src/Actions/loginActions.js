@@ -1,11 +1,10 @@
 import * as types from './types';
 import API from '../API';
+import { addUser } from '../API/User';
 
 export const newUser = (user) => async dispatch => {
     try {
-        await API.post('/users/add', {
-            ...user
-        });
+        await addUser(user);
 
         dispatch({
             type: types.NEW_USER,
@@ -18,7 +17,6 @@ export const newUser = (user) => async dispatch => {
 
 export const setUserName = (userID, bitmoji) => async dispatch => {
     try {
-        console.log('sending dispatch');
         dispatch({
             type: types.SET_USERNAME,
             payload: {
