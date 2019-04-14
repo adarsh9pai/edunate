@@ -8,8 +8,9 @@ class CheckoutForm extends Component {
   }
 
   async submit(ev) {
+    console.log(ev);
     let {token} = await this.props.stripe.createToken({name: "Name"});
-    let response = await fetch("/charge", {
+    let response = await fetch("http://localhost:3001/charge", {
       method: "POST",
       headers: {"Content-Type": "text/plain"},
       body: token.id
@@ -29,7 +30,7 @@ class CheckoutForm extends Component {
       <div className="checkout">
         <p>Would you like to complete the purchase?</p>
         <CardElement />
-        <button onClick={this.submit}>Send</button>
+        <button onClick={()=>console.log("niba")}>Send</button>
       </div>
     );
   }
