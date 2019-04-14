@@ -15,7 +15,6 @@ barter.get('/', (request, response) => {
 */
 barter.post('/add', (request, response) =>
 {
-    console.
     let newBarter = {
         id: randomCode(MAX_CODE),
         user: request.body.user,
@@ -30,7 +29,7 @@ barter.post('/add', (request, response) =>
 
     console.log(newBarter);
 
-    const document = fStore.doc('Barter/' + newBarter.displayName + '-' + newBarter.id);
+    const document = fStore.doc('Barter/' + newBarter.user.displayName + '-' + newBarter.id);
     document.set(newBarter).then(() => {
         response.json({message: "success", description: "barter has been added"});
     })
