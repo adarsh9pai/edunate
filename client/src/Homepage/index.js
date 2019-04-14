@@ -11,6 +11,7 @@ import Post from './searchCards';
 import defaultStyles from '../Theme/styles';
 import SearchBar from '../Components/searchBar';
 import StackGrid from 'react-stack-grid';
+import { getAllBarters } from '../API/Barter';
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -34,12 +35,14 @@ class Homepage extends React.Component {
             isAddPostOpen: false,
             requests: [],
             hashtags: [],
+            barters: [],
             tag: '',
         }
     }
 
     componentDidMount = async () => {
-
+        const barters = await getAllBarters();
+        this.setState({ barters });
     }
 
     handleHashtagClick = hashtag => () => {

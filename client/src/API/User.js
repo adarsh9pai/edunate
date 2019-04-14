@@ -36,7 +36,7 @@ export const getUser = async userID => {
 
 export const addUser = user => {
     return new Promise((resolve, reject) => {
-        API.post('/barter/add',
+        API.post('/users/add',
         JSON.stringify(user.add()), 
         {})
         .then(() => resolve('User added!'))

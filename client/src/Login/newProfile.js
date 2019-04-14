@@ -48,9 +48,9 @@ class Profile extends React.Component {
   }
 
   handleContinueClick = () => {
-    const { newUser, login, userID: displayName } = this.props;
+    const { newUser, login, userID: displayName, bitmoji } = this.props;
 
-    newUser(new User({...this.state, displayName}));
+    newUser(new User({...this.state, displayName, bitmoji}));
     login(new User({...this.state, displayName}));
     this.props.history.push('./homepage');
   }
