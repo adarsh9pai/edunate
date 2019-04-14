@@ -12,7 +12,7 @@ users.get('/',(request, response)=>{
 })
 
 users.get('/exists',(request, response)=>{
-    let document = fStore.collection("Users").doc(request.query.displayName);
+    let document = fStore.collection("Users").doc(request.query.displayName).split('/').join('_');
     document.get().then((user)=>{
         if(user.exists){
             response.json({message : true});
@@ -26,7 +26,7 @@ users.get('/exists',(request, response)=>{
 })
 
 users.get('/get',(request, response)=>{
-    let document = fStore.collection("Users").doc(request.query.displayName);
+    let document = fStore.collection("Users").doc(request.query.displayName.split('/').join('_'));
     document.get().then((user)=>{
         if(user.exists){
             response.json({message : "success",
@@ -52,7 +52,7 @@ users.post('/add', (request, response)=>{
         classification : request.body.classification,
         location : request.body.location 
     };
-    const document = fStore.doc('Users/' + documentObject.displayName).set(documentObject)
+    const document = fStore.doc('Users/' + documentObject.displayName.split('/').join('_')).set(documentObject)
     .then(() => {
         response.json({message : "success",
     description : "user has been added."})

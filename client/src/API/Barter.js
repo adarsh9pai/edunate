@@ -7,7 +7,7 @@ export class Barter {
     constructor({id, user, received = [], datePosted, promise, hashtags, request, dateEnd = new Date(), isFulfilled}) {
         console.log('in user', user);
         this.user = new User(user);
-        this.received = received.map(receive => new Received(receive));
+        this.received = received;
         this.datePosted = datePosted;
         this.id = id;
         this.promise = promise;
@@ -76,7 +76,7 @@ export const addBarter = barter => {
 }
 
 export const updateBarter = barter => {
-    console.log('in updating barter', barter);
+    console.log('in updating barter', barter.update());
     return new Promise((resolve, reject) => {
         API.post('/barter/update', 
         JSON.stringify(barter.update()),
