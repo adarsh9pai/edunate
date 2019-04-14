@@ -25,7 +25,7 @@ passport.use(new SnapchatStrategy({
     clientID: configFile.clientID,
     clientSecret: configFile.clientSecret,
     callbackURL: 'http://localhost:3001/login/callback',
-    profileFields: ['id','us', 'displayName', 'bitmoji'],
+    profileFields: ['id', 'displayName', 'bitmoji'],
     scope: ['user.display_name', 'user.bitmoji.avatar'],
     pkce: true,
     state: true
@@ -48,12 +48,13 @@ app.get('/login/callback',
   passport.authenticate('snapchat', { failureRedirect: '/login' }),
   function(request, response) {
     let url = 'http://localhost:3001/users/doesUserExist?displayName=' + request.user.id; 
+    console.log(request.user.id);
     axios.get(url).then((data)=>{
       if(data.message == "true"){
-        response.redirect('http://localhost:3000/?loggedIn=true&newUser=false');    
+        response.redirect('http://localhost:3000/?loggedIn=true&newUser=false'+ '&bitmoji=' + request.user.bitmoji.avatarUrl);    
       }
       else{
-        response.redirect('http://localhost:3000/?loggedIn=true&newUser=true');
+        response.redirect('http://localhost:3000/?loggedIn=true&newUser=true'+ '&bitmoji=' + request.user.bitmoji.avatarUrl);
       }
     });
   }
