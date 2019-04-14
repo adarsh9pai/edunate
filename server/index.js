@@ -9,6 +9,10 @@ const SnapchatStrategy = require('passport-snapchat').Strategy;
 const axios = require('axios');
 const configFile = require('./config');
 const stripe = require('stripe')(configFile.secret_key);
+const Firestore = require('@google-cloud/firestore');
+const MAX_CODE = 1000000;
+
+let fStore = new Firestore();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -73,28 +77,20 @@ app.listen(PORT, (request, response)=>{
 })
 
 app.post('/charge', async(request, response)=>{
+  let account = '';
   try{
     let {status} = await stripe.charges.create({
-      amount : 2,
+      amount : 500,
       currency : "usd",
       description : 'example',
       source : request.body
     });
-
-    response.json({status});
-
-    stripe.payouts.create({
-      amount : 2,
-      currency : "usd",
-      receipient: "cus_Esn19pWQXltIJk",
-      card: '4242424242424242',
-      statement_descriptor: "sample"
-    },
-    (error, payout)=>{
-      console.log("payout or error");
-    });
+    console.log("success");
+    response.json({message : 'success'});
   }
   catch(error){
+    console.log(error.message);
     response.status(500).end();
   }
+
 })

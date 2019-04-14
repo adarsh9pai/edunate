@@ -17,6 +17,7 @@ import SnackBar from '../Components/snackbar';
 import { Request } from '../API/Request';
 import Payment from '../Payment/Payment';
 import { getUser } from '../API/User';
+import { templates } from 'handlebars';
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -43,6 +44,7 @@ class Homepage extends React.Component {
             requests: [],
             hashtags: [],
             barters: [],
+            received: [],
             tag: '',
             selectedPost: null,
             selectedTag: '',
@@ -60,8 +62,8 @@ class Homepage extends React.Component {
     componentDidMount = async () => {
         const { userID } = this.props;
 
-        this.fetchAll();
         const user = await getUser(userID);
+        this.fetchAll();
         this.setState({ user });
     }
 
@@ -109,12 +111,12 @@ class Homepage extends React.Component {
     }
 
     handleUpdatePost = () => {
-        const { selectedPost } = this.state;
+        const { user } = this.state;
 
         updateBarter(new Barter({
-            ...selectedPost,
-            ...this.state,
+            user,
             request: new Request(this.state),
+            ...this.state,
         }))
             .then(() => this.fetchAll())
             .then(() => this.handleShowConfirmation('success', 'Post updated!'))
@@ -179,6 +181,26 @@ class Homepage extends React.Component {
             isPaymentOpen: true,
             selectedPayment: post,
         })
+    }
+
+    handleFinishPayment = (comment) => {
+        console.log(comment);
+        const { received, user } = this.state;
+        const temp = received.slice();
+        
+        temp.push({
+            ...user,
+            payment: '$1',
+            frequency: 'One Time',
+            comment: comment || '',
+        });
+
+
+        this.setState({ 
+            isPaymentOpen: false,
+            received: temp,
+        }, () => this.handleUpdatePost());
+        this.fetchAll();
     }
 
     renderMyPosts = () => {
@@ -421,7 +443,7 @@ class Homepage extends React.Component {
                     </DialogContentText>
 
                     <Grid container>
-                        <Payment onFinish={this.handleClose} onClose={this.handleClose}/>
+                        <Payment onFinish={this.handleFinishPayment} onClose={this.handleClose}/>
                     </Grid>
                 </DialogContent>
             </Dialog>
