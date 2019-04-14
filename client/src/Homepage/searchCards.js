@@ -107,7 +107,7 @@ class Post extends React.Component {
         <Card className={classes.card}>
           <CardHeader
             avatar={<Avatar className={classes.avatar}>
-              <img src={bitmoji} className={classes.bitmoji}></img>
+              <img src={post.user.bitmoji} className={classes.bitmoji}></img>
             </Avatar>
             }
             title={post.user.fullName}
@@ -153,7 +153,9 @@ class Post extends React.Component {
             {
               // Conditionally show the edit button if the current user is the one who posted this 
               onEditClick
-                ? <Button color='primary' onClick={onEditClick(post)} className={classes.button}>Edit</Button>
+                ? <div classname={classes.buttonGroupRight}>
+                  <Button color='primary' onClick={onEditClick(post)} className={classes.button}>Edit</Button>
+                </div>
                 : null
             }
           </CardContent>
