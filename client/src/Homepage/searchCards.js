@@ -19,6 +19,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { Badge, Fab, Button, View } from "@material-ui/core";
 import { Done, AttachMoney } from "@material-ui/icons";
 import NavigationIcon from '@material-ui/icons/Navigation';
+import Chip from '@material-ui/core/Chip';
 
 
 
@@ -26,7 +27,8 @@ import NavigationIcon from '@material-ui/icons/Navigation';
 const styles = theme => ({
   card: {
     minWidth: 300,
-    maxWidth: 400
+    maxWidth: 400,
+    minHeight: 250,
   },
   media: {
     height: 0,
@@ -113,6 +115,12 @@ class Post extends React.Component {
             <Typography component="p">
               request.title {/*user.title*/},
             </Typography>
+          </CardContent>
+          <CardContent>
+            <Chip label="Computer Science" className={classes.chip} variant="outlined" />
+            <Chip label="Giving" className={classes.chip} variant="outlined" />
+            <Chip label="Charity" className={classes.chip} variant="outlined" />
+            <Chip label="Robert" className={classes.chip} variant="outlined" />
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
             <Typography>{expanded ? 'View Less' : 'View More'}</Typography>
