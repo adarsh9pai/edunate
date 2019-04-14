@@ -16,8 +16,12 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Badge } from "@material-ui/core";
-import { Done } from "@material-ui/icons";
+import { Badge, Fab, Button, View } from "@material-ui/core";
+import { Done, AttachMoney } from "@material-ui/icons";
+import NavigationIcon from '@material-ui/icons/Navigation';
+
+
+
 
 const styles = theme => ({
   card: {
@@ -29,12 +33,12 @@ const styles = theme => ({
     paddingTop: "56.25%" // 16:9
   },
   actions: {
-    display: "flex"
+    display: "flex",
+    justifyContent: 'right',
   },
   expand: {
     transform: "rotate(0deg)",
     margin: "auto 0",
-    marginLeft: "45%",
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest
     })
@@ -54,14 +58,20 @@ const styles = theme => ({
     flex: 1
   },
   badge: {
-    margin: 15
-  },
+    margin: 15,
+    },
   badgeAvatar: {
     top: 26,
     right: 26,
-    colorPrimary: "#000000",
-    colorSecondary: "#000000",
-  }
+  }, 
+  extendedIcon: {
+    marginRight: theme.spacing.unit,
+    color: '#000000',
+  },
+  fab:  {
+    marginLeft: '30%',
+    margin: 10,
+  },
 });
 
 class Post extends React.Component {
@@ -70,9 +80,10 @@ class Post extends React.Component {
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
-
+  
   render() {
     const { classes } = this.props;
+    const { expanded } = this.state;
 
     return (
       <Badge
@@ -101,6 +112,7 @@ class Post extends React.Component {
             </Typography>
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
+            <Typography>{expanded ? 'View Less' : 'View More'}</Typography>
             <IconButton
               className={classnames(classes.expand, {
                 [classes.expandOpen]: this.state.expanded
@@ -118,11 +130,18 @@ class Post extends React.Component {
                 request.description {/*user.description*/},
               </Typography>
               <Typography paragraph>
+                promise {/*user.description*/},
+              </Typography>
+              <Typography paragraph>
                 request.datePosted {/*request.datePosted*/},
               </Typography>
               <Typography paragraph>
                 request.dateEnd {/*request.dateEnd*/},
               </Typography>
+              <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
+                <AttachMoney className={classes.extendedIcon} />
+                Donate
+              </Fab>
             </CardContent>
           </Collapse>
         </Card>

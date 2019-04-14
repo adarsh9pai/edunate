@@ -11,8 +11,15 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/firestore": "^1.2.0",
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
+    "connect-ensure-login": "^0.1.1",
+    "cookie-parser": "^1.4.4",
     "express": "^4.16.4",
-    "firebase": "^5.9.4"
+    "express-session": "^1.16.1",
+    "firebase": "^5.9.4",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-snapchat": "^1.0.0"
   }
 }

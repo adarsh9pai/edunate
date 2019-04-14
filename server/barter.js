@@ -83,7 +83,6 @@ barter.get('/getall', (request, response) => {
 			result.push(doc.data());
 		}
 	});
-
         response.json({result});
 
     }).catch((error) => {
