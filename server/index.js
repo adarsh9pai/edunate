@@ -91,6 +91,7 @@ app.post('/charge', async(request, response)=>{
       description : 'example',
       source : request.body
     });
+    console.log(error.message);
     response.json({message : 'success'});
   }
   catch(error){

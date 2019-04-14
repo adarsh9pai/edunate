@@ -19,9 +19,8 @@ class CheckoutForm extends Component {
   }
 
   async submit(ev) {
-    console.log("Purchase Complete!")
-    let { token } = await this.props.stripe.createToken({ name: "Name" });
-
+    let { token } = await this.props.stripe.createToken({ name: "Name" }) || ' ';
+    console.log(token.id);
     if (!token)
       return
 
@@ -69,4 +68,4 @@ const mapStateToProps = state => ({
   userID: state.login.userID,
 })
 
-export default connect(mapStateToProps, {})(withStyles(styles)(CheckoutForm));
+export default connect(mapStateToProps, {})(injectStripe(withStyles(styles)(CheckoutForm)));
