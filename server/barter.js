@@ -58,7 +58,7 @@ barter.get('/get', (request, response) => {
         let document = fStore.collection("Barter").doc(request.query.displayName + "-" + request.query.id);
         document.get().then((barter) => {
             if(barter.exists)
-                response.json(barter);
+                response.json(barter.data());
             else
                 response.json({message: "instance of barter does not exist."})
         }).catch((error) =>{
@@ -80,7 +80,7 @@ barter.get('/getall', (request, response) => {
         {
             if(users[i]['user']['displayName'] == request.body.displayName)
             {
-                result.append(baters[i]);
+                result.append(baters[i].data());
             }
         }
 
