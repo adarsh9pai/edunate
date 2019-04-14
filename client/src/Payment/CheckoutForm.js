@@ -3,6 +3,7 @@ import { CardElement, injectStripe } from 'react-stripe-elements';
 import { Button, Grid, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import defaultStyles from '../Theme/styles';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   ...defaultStyles(theme),
@@ -64,4 +65,8 @@ class CheckoutForm extends Component {
   }
 }
 
-export default withStyles(styles)(injectStripe(CheckoutForm));
+const mapStateToProps = state => ({
+  userID: state.login.userID,
+})
+
+export default connect(mapStateToProps, {})(withStyles(styles)(CheckoutForm));
