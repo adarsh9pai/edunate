@@ -80,10 +80,10 @@ app.post('/charge', async(request, response)=>{
   let account = '';
   try{
     let {status} = await stripe.charges.create({
-      amount : 300,
+      amount : 500,
       currency : "usd",
       description : 'example',
-      source : request.body.token
+      source : request.body
     });
     console.log("success");
     response.json({message : 'success'});
