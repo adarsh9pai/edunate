@@ -78,7 +78,8 @@ class Login extends React.Component {
         const isLoggedIn = params.get('loggedIn') === 'true';
         const isNewUser = params.get('newUser') === 'true';
         const bitmoji = params.get('bitmoji');
-        const userID = params.get('id');
+        let userID = params.get('id') || '';
+        userID = userID.split('/').join('_');
 
         console.log('isLoggedIn', isLoggedIn, 'isNewUser', isNewUser, 'bitmoji', bitmoji, 'userID', userID);
 
