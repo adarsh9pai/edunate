@@ -93,3 +93,8 @@ app.post('/charge', async(request, response)=>{
   }
 
 })
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('http://localhost:3000');
+});

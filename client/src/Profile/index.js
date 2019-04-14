@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, IconButton, Typography, Button, Paper, Grid, Fab } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Typography, Button, Paper, Grid, Fab, ButtonBase } from '@material-ui/core';
 import { AccountCircle, Menu } from '@material-ui/icons';
 import MenuAppBar from '../Components/appBar';
 import defaultStyles from '../Theme/styles';
@@ -31,9 +31,14 @@ const styles = theme => ({
     fontSize: '1.5rem',
   },
   logoutButton: {
+    borderRadius: 20,
     margin: 10,
     height: '100%',
     width: '80%',
+    backgroundColor: theme.palette.secondary.dark,
+    textDecoration: 'none',
+    fontColor: '#000000',
+    fontWeight: 'bold',
   },
   centerDiv: {
     margin: '0 auto',
@@ -227,10 +232,10 @@ class Profile extends React.Component {
 
             <Grid item xs={12} sm={10} className={classes.formGridItem}></Grid>
             <Grid item xs={12} sm={2} className={classes.formGridItem}>
-              <Button onClick={this.onLogoutClick} variant="contained" color="secondary" className={classes.logoutButton}>
+              <ButtonBase onClick={this.onLogoutClick} variant="contained" color="secondary" className={classes.logoutButton}>
                 <PowerSettingsNew className={classes.rightIcon} />
-                Logout
-                      </Button>
+                <a href = "http://localhost:3001/logout">Logout </a>
+                      </ButtonBase>
             </Grid>
           </Grid>
         </div>
