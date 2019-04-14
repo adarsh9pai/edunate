@@ -12,7 +12,7 @@ users.get('/',(request, response)=>{
 })
 
 users.get('/exists',(request, response)=>{
-    let document = fStore.collection("Users").doc(request.query.displayName).split('/').join('_');
+    let document = fStore.collection("Users").doc(request.query.displayName.split('/').join('_'));
     document.get().then((user)=>{
         if(user.exists){
             response.json({message : true});
