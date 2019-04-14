@@ -21,11 +21,13 @@ import { Done, AttachMoney } from "@material-ui/icons";
 import NavigationIcon from '@material-ui/icons/Navigation';
 import Chip from '@material-ui/core/Chip';
 import { connect } from 'react-redux';
+import defaultStyles from '../Theme/styles';
 
 
 
 
 const styles = theme => ({
+  ...defaultStyles(theme),
   card: {
     minWidth: 300,
     maxWidth: 400,
@@ -62,101 +64,96 @@ const styles = theme => ({
   },
   badge: {
     margin: 15,
-    },
+  },
   badgeAvatar: {
     top: 26,
     right: 26,
-  }, 
+  },
   extendedIcon: {
     marginRight: theme.spacing.unit,
     color: '#000000',
   },
-  fab:  {
-    marginLeft: '30%',
-    margin: 10,
+  fab: {
+    marginTop: theme.spacing.unit,
+    width: '100%',
+    color: 'inherit',
   },
   checkMark: {
     backgroundColor: '#66bb6a',
   },
+  bitmoji: {
+    width: 40,
+    height: 40,
+  },
+  paddingSideTheme2: {
+    padding: '0 16px',
+  }
 });
 
 class Post extends React.Component {
   state = { expanded: false };
 
   handleExpandClick = () => {
-    this.setState(state => ({ expanded: !state.expanded }));
-  };
-  
-  render() {
-    const { classes, post, bitmoji, displayName } = this.props;
-    const { expanded } = this.state;
+    const { onExpand } = this.props;
 
-    console.log(post);
+    this.setState(state => ({ expanded: !state.expanded }));
+    onExpand();
+  };
+
+  render() {
+    const { classes, post, bitmoji, onEditClick } = this.props;
+    const { expanded } = this.state;
 
     return (
       <Badge
         className={classes.badge}
         classes={{ badge: classes.badgeAvatar }}
         badgeContent={
-            <Avatar className={classes.checkMark}>
-            <Done />
-          </Avatar>
+          post.isFulfilled
+            ? <Avatar className={classes.checkMark}>
+              <Done />
+            </Avatar>
+            : null
         }
       >
         <Card className={classes.card}>
           <CardHeader
-            avatar={
-              <Avatar aria-label="Recipe" className={classes.avatar}>
-                <img src={bitmoji}></img>
-              </Avatar>
+            avatar={<Avatar className={classes.avatar}>
+              <img src={bitmoji} className={classes.bitmoji}></img>
+            </Avatar>
             }
-            title={displayName} //user.displayName
+            title={post.user.fullName}
             subheader={post.request.type}
           />
           <CardContent className={classes.title}>
-            <Typography>{post.request.title}</Typography>
+            <Typography variant='h6'>{post.request.title}</Typography>
             <Typography component="p">
-              {post.request.description},
+              {post.request.description}
             </Typography>
           </CardContent>
+          <CardContent className={classes.paddingSideTheme2}>
+            {post.hashtags.map((hashtag, i) => (
+              <Chip key={`hashtag-${i}`} label={hashtag} className={classes.marginTheme} />
+            ))}
+          </CardContent>
           <CardContent>
-            {post.hashtags.map((hashtag,i) => (
-                <Chip key={`hashtag-${i}`} label={hashtag} className={classes.chip} variant="outlined" /> 
-             ) )}
-            </CardContent>
-          <CardActions className={classes.actions} disableActionSpacing>
-            <Typography>{expanded ? 'View Less' : 'View More'}</Typography>
-            <IconButton
-              className={classnames(classes.expand, {
-                [classes.expandOpen]: this.state.expanded
-              })}
-              onClick={this.handleExpandClick}
-              aria-expanded={this.state.expanded}
-              aria-label="Show more"
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </CardActions>
-          <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph>
-                {post.request.description}
-              </Typography>
-              <Typography paragraph>
-                {post.promise}
-              </Typography>
-              <Typography paragraph>
-                {post.datePosted}
-              </Typography>
-              <Typography paragraph>
-                {post.dateEnd}
-              </Typography>
+              <Typography variant='h6' className={classes.bold}>Promise</Typography>
+              <Typography gutterBottom> {post.promise} </Typography>
+
+              <Typography gutterBottom>{`Posted ${post.datePosted}`}</Typography>
+
               <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
                 <AttachMoney className={classes.extendedIcon} />
                 Donate
               </Fab>
+
+              {
+                // Conditionally show the edit button if the current user is the one who posted this 
+                onEditClick 
+                  ? <Button color='primary' onClick={onEditClick(post)} className={classes.button}>Edit</Button>
+                  : null
+              }
             </CardContent>
-          </Collapse>
         </Card>
       </Badge>
     );
@@ -164,8 +161,10 @@ class Post extends React.Component {
 }
 
 Post.propTypes = {
-  classes: PropTypes.object.isRequired, 
+  classes: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
+  onEditClick: PropTypes.func,
+  onExpand: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => ({ bitmoji: state.login.bitmoji, userID: state.login.userID, displayName: state.login.displayName })
 export default connect(mapStateToProps, {})(withStyles(styles)(Post));
