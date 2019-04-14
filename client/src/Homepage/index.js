@@ -252,7 +252,7 @@ class Homepage extends React.Component {
 
         return (
             <div >
-                <MenuAppBar title='Homepage' />
+                <MenuAppBar title='Homepage' history={this.props.history}/>
                 <div className={classes.root}>
                     <SearchBar />
                     {this.renderMyPosts()}
