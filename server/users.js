@@ -53,7 +53,7 @@ users.post('/addUser', (request, response)=>{
     };
     const document = fStore.doc('Users/' + documentObject.displayName).set(documentObject)
     .then(() => {
-        response.json({message : "Success",
+        response.json({message : "success",
     description : "user has been added."})
     })
     .catch((error)=>{
