@@ -28,7 +28,7 @@ export class User {
 export const getUser = async userID => {
     try {
         const res = await API.get(`/users/get?displayName=${userID}`);
-        return new User(res.data);
+        return new User(res.data.user);
     } catch (error) {
         console.log(error);
     }
@@ -36,7 +36,7 @@ export const getUser = async userID => {
 
 export const addUser = user => {
     return new Promise((resolve, reject) => {
-        API.post('/barter/add',
+        API.post('/users/add',
         JSON.stringify(user.add()), 
         {})
         .then(() => resolve('User added!'))

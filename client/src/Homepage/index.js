@@ -11,6 +11,12 @@ import Post from './searchCards';
 import defaultStyles from '../Theme/styles';
 import SearchBar from '../Components/searchBar';
 import StackGrid from 'react-stack-grid';
+import { getAllBarters, getTrendingHashtags, addBarter, Barter, updateBarter } from '../API/Barter';
+import { connect } from 'react-redux';
+// import { InlineDatePicker } from 'material-ui-pickers';
+import SnackBar from '../Components/snackbar';
+import { Request } from '../API/Request';
+import Payment from '../Payment/Payment';
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -30,24 +36,45 @@ class Homepage extends React.Component {
         super(props);
 
         this.state = {
-            trendingHashtags: ['Computer Science', 'Giving', 'Charity', 'Robert'],
+            trendingHashtags: [],
             isAddPostOpen: false,
+            isEditPostOpen: false,
+            isPaymentOpen: false,
             requests: [],
             hashtags: [],
+            barters: [],
             tag: '',
+            selectedPost: null,
+            selectedTag: '',
+            selectedPayment: null,
+
+            confirmation: {
+                variant: null,
+                message: null,
+                isOpen: false,
+            },
         }
     }
 
     componentDidMount = async () => {
+        this.fetchAll();
+    }
 
+    fetchAll = async () => {
+        const barters = await getAllBarters();
+        const trendingHashtags = await getTrendingHashtags();
+        this.setState({
+            barters,
+            trendingHashtags,
+        });
     }
 
     handleHashtagClick = hashtag => () => {
-
+        this.setState({ selectedTag: hashtag });
     }
 
     handleClose = () => {
-        this.setState({ isAddPostOpen: false });
+        this.setState({ isAddPostOpen: false, isEditPostOpen: false, isPaymentOpen: false, });
     }
 
     handleAddPostClick = () => {
@@ -62,15 +89,32 @@ class Homepage extends React.Component {
         this.setState({ [e.target.id]: e.target.value });
     }
 
-    handleRequestTextChange = requestIndex => e => {
-        const { requests } = this.state;
-        requests[requestIndex].title = e.target.value;
+    handlePost = () => {
+        const { userID: displayName } = this.props;
 
-        this.setState({ requests });
+        addBarter(new Barter({
+            user: { displayName },
+            request: new Request(this.state),
+            ...this.state,
+        }))
+            .then(() => this.fetchAll())
+            .then(() => this.handleShowConfirmation('success', 'Post created!'))
+            .then(() => this.setState({ isAddPostOpen: false }))
+            .catch(err => this.handleShowConfirmation('error', "oof, something went wrong!"));
     }
 
-    handlePost = () => {
+    handleUpdatePost = () => {
+        const { selectedPost } = this.state;
 
+        updateBarter(new Barter({
+            ...selectedPost,
+            ...this.state,
+            request: new Request(this.state),
+        }))
+            .then(() => this.fetchAll())
+            .then(() => this.handleShowConfirmation('success', 'Post updated!'))
+            .then(() => this.setState({ isEditPostOpen: false }))
+            .catch(err => this.handleShowConfirmation('error', "Oof, something went wrong!"));
     }
 
     handleSelectChange = id => e => {
@@ -80,24 +124,9 @@ class Homepage extends React.Component {
     handleAddHashtag = () => {
         const { tag, hashtags } = this.state;
         if (tag)
-            hashtags.push({
-                id: null,
-                tag,
-            });
+            hashtags.push(tag);
 
         this.setState({ hashtags, tag: '' });
-    }
-
-    handleAddRequestClick = () => {
-        const { requests } = this.state;
-
-        requests.push({
-            type: '',
-            title: '',
-            description: '',
-        });
-
-        this.setState({ requests });
     }
 
     handleDeleteHashtag = hashtagIndex => () => {
@@ -107,23 +136,63 @@ class Homepage extends React.Component {
         this.setState({ hashtags });
     }
 
+    handleEditPostClick = post => () => {
+        this.setState({
+            ...post,
+            ...post.request,
+            isEditPostOpen: true,
+            selectedPost: post,
+        })
+    }
+
+    handleShowConfirmation = (type, message) => {
+        this.setState({
+            confirmation: {
+                variant: type,
+                message: message,
+                isOpen: true,
+            },
+        });
+    };
+
+    handleHideConfirmation = () => {
+        this.setState(prevState => ({
+            confirmation: {
+                ...prevState.confirmation,
+                isOpen: false,
+            },
+        }));
+    };
+
+    handlePostExpand = () => {
+        this.grid.updateLayout();
+
+    }
+
+    handleDonateClick = post => () => {
+        this.setState({
+            isPaymentOpen: true,
+            selectedPayment: post,
+        })
+    }
+
     renderMyPosts = () => {
-        const { classes } = this.props;
+        const { classes, userID } = this.props;
+        const { barters } = this.state;
+
+        let userBarters = barters.filter(barter => barter.user.displayName === userID);
 
         return (
             <div className={classes.marginTheme}>
                 <Typography variant='h6' color='primary'>My Posts</Typography>
                 <Divider className={classes.marginTheme} />
-                <StackGrid columnWidth={350} gutterWidth={20} gutterHeight={20}>
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
+                <StackGrid columnWidth={350} gutterWidth={20} gutterHeight={20} gridRef={grid => this.grid = grid}>
+                    {userBarters.map((post, i) =>
+                        <Post key={`post-${i}`}
+                            post={post}
+                            onEditClick={this.handleEditPostClick}
+                            onExpand={this.handlePostExpand}
+                            onDonateClick={this.handleDonateClick} />)}
                 </StackGrid>
             </div>
         );
@@ -146,21 +215,23 @@ class Homepage extends React.Component {
 
     renderRecentPosts = () => {
         const { classes } = this.props;
+        const { barters, selectedTag } = this.state;
+
+        // Get only the posts that were posted within the last 3 days
+        const recentPosts = barters.filter(barter => barter.hashtags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase() || !selectedTag))
+            .filter(barter => ((new Date()) - (new Date(barter.datePosted))) / 1000 / 60 / 60 / 24 < 3)
 
         return (
             <div className={classes.marginTheme}>
                 <Typography variant='h6' color='primary'>Recent Posts</Typography>
                 <Divider className={classes.marginTheme} />
-                <StackGrid columnWidth={350} gutterWidth={20} gutterHeight={20}>
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
+                <StackGrid columnWidth={350} gutterWidth={20} gutterHeight={20} gridRef={grid => this.grid = grid}>
+                    {recentPosts.map(post =>
+                        <Post
+                            post={post}
+                            onExpand={this.handlePostExpand}
+                            onDonateClick={this.handleDonateClick}
+                        />)}
                 </StackGrid>
             </div>
         );
@@ -208,9 +279,9 @@ class Homepage extends React.Component {
                                     },
                                 }}
                             >
-                                <MenuItem value='monetary'>Monetary</MenuItem>
-                                <MenuItem value='commodity'>Commodity</MenuItem>
-                                <MenuItem value='skill'>Skill</MenuItem>
+                                <MenuItem value='Monetary'>Monetary</MenuItem>
+                                <MenuItem value='Commodity'>Commodity</MenuItem>
+                                <MenuItem value='Skill'>Skill</MenuItem>
                             </TextField>
                         </Grid>
                         <Grid item xs={12} className={classes.formGridItem}>
@@ -239,7 +310,7 @@ class Homepage extends React.Component {
                             <Button variant='contained' color='primary' onClick={this.handleAddHashtag}> Add Hashtag </Button>
                         </Grid>
                         {hashtags.map((hashtag, i) => (
-                            <Chip key={`hashtag-${i}`} label={hashtag.tag} className={classes.marginTheme} onDelete={this.handleDeleteHashtag(i)} clickable />
+                            <Chip key={`hashtag-${i}`} label={hashtag} className={classes.marginTheme} onDelete={this.handleDeleteHashtag(i)} clickable />
                         ))}
                     </Grid>
                 </DialogContent>
@@ -251,19 +322,136 @@ class Homepage extends React.Component {
         )
     }
 
+    renderEditPost = () => {
+        const { classes } = this.props;
+        const { isEditPostOpen, type, tag, title, description, promise, hashtags } = this.state;
+
+        return (
+            <Dialog
+                open={isEditPostOpen}
+                onClose={this.handleClose}
+            >
+                <DialogTitle>Edit Post</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        We get it, it's tough. So, crowd source your friends, family, and kind-hearted strangers to give you either money, commodities, or their skills
+                        to help you through your college journey.
+                    </DialogContentText>
+
+                    <Grid container>
+
+                        {/* Request */}
+                        <Grid item xs={12} className={classes.formGridItem}>
+                            <Typography variant='h6'>Request</Typography>
+                            <Typography>A description of what you are needing for college</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6} className={classes.formGridItem}>
+                            <TextField id="title" label="Title" defaultValue={title} onBlur={this.handleTextChange} fullWidth />
+                        </Grid>
+                        <Grid item xs={12} sm={6} className={classes.formGridItem}>
+                            <TextField id='type' label="Type" value={type} onChange={this.handleSelectChange('type')} fullWidth select
+                                SelectProps={{
+                                    MenuProps: {
+                                        className: classes.menu,
+                                    },
+                                }}
+                            >
+                                <MenuItem value='Monetary'>Monetary</MenuItem>
+                                <MenuItem value='Commodity'>Commodity</MenuItem>
+                                <MenuItem value='Skill'>Skill</MenuItem>
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} className={classes.formGridItem}>
+                            <TextField id="description" label="Description" defaultValue={description} onBlur={this.handleTextChange} fullWidth multiline />
+                        </Grid>
+
+
+                        {/* Promise */}
+                        <Grid item xs={12} className={classes.formGridItem}>
+                            <Typography variant='h6'>Promise</Typography>
+                            <Typography>A short description of what I promise to any of my benefactors</Typography>
+                        </Grid>
+                        <Grid item xs={12} className={classes.formGridItem}>
+                            <TextField id="promise" defaultValue={promise} label="Promise" onBlur={this.handleTextChange} fullWidth />
+                        </Grid>
+
+                        {/* Hashtags */}
+                        <Grid item xs={12} className={classes.formGridItem}>
+                            <Typography variant='h6'>Hash Tags</Typography>
+                            <Typography>Give your post some keywords to search by</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={7} className={classes.formGridItem}>
+                            <TextField id='tag' label='Hashtag Name' value={tag} onChange={this.handleTextChange} fullWidth />
+                        </Grid>
+                        <Grid item xs={12} sm={4} className={classes.formGridItem}>
+                            <Button variant='contained' color='primary' onClick={this.handleAddHashtag}> Add Hashtag </Button>
+                        </Grid>
+                        {hashtags.map((hashtag, i) => (
+                            <Chip key={`hashtag-${i}`} label={hashtag} className={classes.marginTheme} onDelete={this.handleDeleteHashtag(i)} clickable />
+                        ))}
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose}> Cancel </Button>
+                    <Button onClick={this.handleUpdatePost} color="primary"> Update </Button>
+                </DialogActions>
+            </Dialog>
+        )
+    }
+
+    renderPaymentDialog = () => {
+        const { classes } = this.props;
+        const { isPaymentOpen } = this.state;
+
+        return (
+            <Dialog
+                open={isPaymentOpen}
+                onClose={this.handleClose}
+            >
+                <DialogTitle>Donate</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Thank you for helping this student out with supporting their way through college. 
+                        Your donations mean more than you think they do!
+                    </DialogContentText>
+
+                    <Grid container>
+                        <Payment onFinish={this.handleClose} onClose={this.handleClose}/>
+                    </Grid>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+
+    renderSnackBar() {
+        const { confirmation } = this.state;
+
+        return (
+            <SnackBar
+                variant={confirmation.variant}
+                message={confirmation.message}
+                isOpen={confirmation.isOpen}
+                onClose={this.handleHideConfirmation}
+            />
+        );
+    }
+
     render() {
         const { classes } = this.props;
 
         return (
             <div >
-                <MenuAppBar title='Homepage' history={this.props.history}/>
+                <MenuAppBar title='Homepage' history={this.props.history} />
                 <div className={classes.root}>
                     <SearchBar />
-                    {this.renderMyPosts()}
                     {this.renderTrendingHashtags()}
+                    {this.renderMyPosts()}
                     {this.renderRecentPosts()}
                     {this.renderAddPostDialog()}
+                    {this.renderEditPost()}
                     {this.renderAddButton()}
+                    {this.renderSnackBar()}
+                    {this.renderPaymentDialog()}
                 </div>
             </div>
         );
@@ -274,4 +462,8 @@ Homepage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Homepage);
+const mapStateToProps = state => ({
+    userID: state.login.userID,
+})
+
+export default connect(mapStateToProps, {})(withStyles(styles)(Homepage));

@@ -1,40 +1,63 @@
 import React, {Component} from 'react';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import defaultStyles from '../Theme/styles';
+import  { connect } from 'react-redux';
+import {Elements, StripeProvider} from 'react-stripe-elements';
 
+const styles = theme => ({
+  ...defaultStyles(theme),
+})
 class CheckoutForm extends Component {
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
+    const { userID } = this.props;
   }
 
   async submit(ev) {
     let {token} = await this.props.stripe.createToken({name: "Name"});
+    if (!token)
+      return 
+
     let response = await fetch("http://localhost:3001/charge", {
-      mode : 'no-cors',
+      mode: 'no-cors',
       method: "POST",
       headers: {"Content-Type": "text/plain"},
-      body: token.id
+      body: {
+        userID : this.state.userID,
+        token : token.id
+      }
     });
   
-    if (response.ok) 
-
     if (response.ok) this.setState({complete: true});
+    this.props.onFinish();
+}
+
+onClose = () => {
+  this.props.onClose();
 }
   
 
   render() {
-
-   //if (this.state.complete) return <h1>Purchase Complete</h1>;
+    const { classes } = this.props;
 
     return (
       <div className="checkout">
-        <p>Would you like to complete the purchase?</p>
         <CardElement />
-        <Button onClick={this.submit}>Send</Button>
+        <div className={classes.buttonGroupRight}>
+          <Button onClick={this.onClose} className={classes.button}>Close</Button>
+          <Button color='primary' onClick={this.submit} className={classes.button}>Send</Button>
+        </div>
       </div>
     );
   }
 }
 
-export default injectStripe(CheckoutForm);
+
+const mapStateToProps = state => ({
+  userID: state.login.userID,
+})
+
+export default connect(mapStateToProps, {})(withStyles(styles)(CheckoutForm));
