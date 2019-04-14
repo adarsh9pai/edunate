@@ -5,9 +5,16 @@ import { AppBar, Toolbar, IconButton, Typography, Button, Paper, Grid, Fab } fro
 import { AccountCircle, Menu } from '@material-ui/icons';
 import MenuAppBar from '../Components/appBar';
 import defaultStyles from '../Theme/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+
 
 const styles = theme => ({
     ...defaultStyles(theme),
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+      },
 });
 
 class Profile extends React.Component {
@@ -26,7 +33,42 @@ class Profile extends React.Component {
             <div>
                <MenuAppBar title='Profile' />
                 <div className={classes.root}>
-
+                <TextField
+                    disabled
+                    id="outlined-disabled"
+                    label="Full Name"
+                    defaultValue="Nahian Alam"
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    />
+                <TextField
+                    disabled
+                    id="outlined-disabled"
+                    label="Age"
+                    defaultValue="18+"
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    />                
+                <TextField
+                    disabled
+                    id="outlined-disabled"
+                    label="University"
+                    defaultValue="University of Texas at Arlington"
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    />                
+                <TextField
+                    disabled
+                    id="outlined-disabled"
+                    label="Classification"
+                    defaultValue="Senior"
+                    className={classes.textField}
+                    margin="normal"
+                    variant="outlined"
+                    />   
                 </div>
             </div>
         );
