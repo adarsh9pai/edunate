@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { InputBase } from '@material-ui/core';
 import defaultStyles from '../Theme/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -13,12 +14,9 @@ const styles = theme => ({
         '&:hover': {
             backgroundColor: fade(theme.palette.common.white, 0.25),
         },
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing.unit,
-            width: 'auto',
-        },
+        margin: '0 auto',
+        marginTop: 64 + theme.spacing.unit * 3,
+        width: '50%',
     },
     searchIcon: {
         width: theme.spacing.unit * 9,
@@ -32,6 +30,8 @@ const styles = theme => ({
     inputRoot: {
         color: 'inherit',
         width: '100%',
+        background: '#efefef',
+        borderRadius: 10,
     },
     inputInput: {
         paddingTop: theme.spacing.unit,
@@ -52,6 +52,8 @@ const styles = theme => ({
 
 class SearchBar extends React.Component {
     render() {
+        const { classes } = this.props;
+
         return (
             <div className={classes.search}>
                 <div className={classes.searchIcon}>
