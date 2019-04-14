@@ -33,7 +33,7 @@ class PageNotFound extends React.Component {
         const { classes } = this.props;
         return (
             <div>
-                <MenuAppBar title='' />
+                <MenuAppBar title='' history={this.props.history}/>
 
                 <div className={classes.root}>
                     <div className={classes.top}>

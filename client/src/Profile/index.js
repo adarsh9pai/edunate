@@ -31,7 +31,7 @@ class Profile extends React.Component {
 
         return (
             <div>
-               <MenuAppBar title='Profile' />
+               <MenuAppBar title='Profile' history={this.props.history}/>
                 <div className={classes.root}>
                 <TextField
                     disabled
