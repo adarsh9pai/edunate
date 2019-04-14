@@ -51,11 +51,11 @@ barter.post('/update', (request, response) => {
 });
 
 /*  
-    needs request.query.user, request.query.id
+    needs request.query.displayName, request.query.id
 */
 barter.get('/get', (request, response) => {
 
-        let document = fStore.collection("Barter").doc(request.query.user['displayName'] + "-" + request.query.id);
+        let document = fStore.collection("Barter").doc(request.query.displayName + "-" + request.query.id);
         document.get().then((barter) => {
             if(barter.exists)
                 response.json(barter);
