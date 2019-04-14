@@ -23,11 +23,9 @@ barter.post('/add', (request, response) =>
         promise: request.body.promise,
         hashtags: request.body.hashtags,
         isFulfilled: false,
-        datePosted: new Date().toString(),
+        datePosted: (new Date().toJSON().slice(0,10)).split('-').join('/'),
         dateEnd: request.body.dateEnd
     };
-
-    console.log(newBarter);
 
     const document = fStore.doc('Barter/' + newBarter.user.displayName + '-' + newBarter.id);
     document.set(newBarter).then(() => {
@@ -42,6 +40,7 @@ barter.post('/add', (request, response) =>
 barter.post('/update', (request, response) => {
     
      let updatedBarter = request.body;
+     updatedBarter.isFulfilled = isFulfilled(updatedBarter);
      let document = fStore.collection("Barter").doc(updatedBarter.user.displayName + "-" + updatedBarter.id);
      document.set(updatedBarter).then(() => {
 	response.json({message: "success"});
@@ -91,6 +90,26 @@ barter.get('/getall', (request, response) => {
 
 
 });
+
+let isFulfilled = post => {
+
+	if(post.request.type == 'money')
+	{
+	
+		let receivedSum = 0.0;
+
+		for(let i = 0; i < post.received.length; i++)
+		{
+			receivedSum += (parseFloat(post.received[i].payment) * parseFloat(post.received[i].frequency));
+		}
+		return receivedSum >= parseFloat(post.request.description);
+	}
+	else
+	{
+		return true;
+	}
+
+}
 
 let randomCode = max => {
     return Math.floor((Math.random() * max) + 1).toString(16).toUpperCase();
