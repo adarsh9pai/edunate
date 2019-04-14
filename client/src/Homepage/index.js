@@ -38,6 +38,10 @@ class Homepage extends React.Component {
         }
     }
 
+    componentDidMount = async () => {
+
+    }
+
     handleHashtagClick = hashtag => () => {
 
     }

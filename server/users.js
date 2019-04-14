@@ -37,6 +37,7 @@ users.get('/get',(request, response)=>{
         }
     }).catch((error)=>{
         response.json({message : "Error. Try again later."});
+        console.log(error.message);
     })    
 })
 
