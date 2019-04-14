@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {CardElement, injectStripe} from 'react-stripe-elements';
+import { CardElement, injectStripe } from 'react-stripe-elements';
+import { Button } from '@material-ui/core';
 
 class CheckoutForm extends Component {
   constructor(props) {
@@ -8,6 +9,7 @@ class CheckoutForm extends Component {
   }
 
   async submit(ev) {
+    console.log("Purchase Complete!")
     let {token} = await this.props.stripe.createToken({name: "Name"});
     let response = await fetch("/charge", {
       method: "POST",
@@ -29,7 +31,7 @@ class CheckoutForm extends Component {
       <div className="checkout">
         <p>Would you like to complete the purchase?</p>
         <CardElement />
-        <button onClick={this.submit}>Send</button>
+        <Button onClick={this.submit}>Send</Button>
       </div>
     );
   }
