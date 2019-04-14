@@ -49,7 +49,7 @@ users.post('/add', (request, response)=>{
         university : request.body.university,
         major : request.body.major,
         classification : request.body.classification,
-        city : request.body.city 
+        location : request.body.location 
     };
     const document = fStore.doc('Users/' + documentObject.displayName).set(documentObject)
     .then(() => {
