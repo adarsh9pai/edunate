@@ -11,9 +11,9 @@ import { getUser } from '../API/User';
 const styles = theme => ({
     ...defaultStyles(theme),
     logo: {
-        height: 100,
-        width: 100,
-        marginLeft: 20,
+        height: 400,
+        width: 400,
+        margin: 100,
     },
     fab: {
         backgroundColor: '#FFFC00',
@@ -27,21 +27,38 @@ const styles = theme => ({
         margin: '0 auto',
         marginTop: 100,
     },
-    centerDiv: {
+    loginButton: {
         margin: '0 auto',
         width: '50%',
+        alling: 'centre',
+        marginBottom: 250,
+    },
+    loginDescription: {
+        margin: '0 auto',
+        width: '50%',
+        alling: 'centre',
+        marginTop: 200,
+        fontSize: '2rem',
     },
     aButton: {
         padding: theme.spacing.unit * 3,
         background: theme.palette.primary.main,
         margin: theme.spacing.unit * 2,
-        borderRadius: theme.spacing.unit * 1.5,
+        borderRadius: 50,
         margin: '0 auto',
-        width: '50%',
+        width: '100%',
+        fontWeight: 'bold',
+        color: '#000000',
+        backgroundColor: '#FFFC00',
+        font: 'inherit' ,
     },
     aLink: {
         textDecoration: 'none',
         color: 'inherit',
+    },
+    background: {
+        backgroundColor: theme.palette.primary.light,
+        height: '100%',
     },
 });
 
@@ -61,7 +78,8 @@ class Login extends React.Component {
         const isLoggedIn = params.get('loggedIn') === 'true';
         const isNewUser = params.get('newUser') === 'true';
         const bitmoji = params.get('bitmoji');
-        const userID = params.get('id');
+        let userID = params.get('id') || '';
+        userID = userID.split('/').join('_');
 
         console.log('isLoggedIn', isLoggedIn, 'isNewUser', isNewUser, 'bitmoji', bitmoji, 'userID', userID);
 
@@ -87,18 +105,28 @@ class Login extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Paper className={classes.paper}>
-                <div className={classes.centerDiv}>
-                    <img src='logo.png' alt='Edunote Logo' className={classes.logo} />
-                </div>
-                <Typography variant='h4' align='center'>Edunate</Typography>
+            <Grid container className={classes.background}>
+             <Grid xm={12} xs={1}></Grid>
+             <Grid xm={12} xs={5}>
 
-                <div className={classes.centerDiv}>
-                    <ButtonBase className={classes.aButton}>
-                        <a href="http://localhost:3001/login" className={classes.aLink}>LOGIN WITH SNAPCHAT</a>
-                    </ButtonBase>
-                </div>
-            </Paper>
+              <div>
+               <img src='logo.png' alt='Edunote Logo' className={classes.logo} />
+              </div>
+            </Grid>
+
+             <Grid xm={12} xs={5}>
+            <Typography paragraph className={classes.loginDescription}>
+            📚💵👩‍🏫Succeed in College through micro-donations, peer tutoring and textbook exchange. 
+            </Typography>
+             <div className={classes.loginButton}>
+              <ButtonBase className={classes.aButton}>
+                 <a href="http://localhost:3001/login" className={classes.aLink}>LOGIN WITH SNAPCHAT</a>
+             </ButtonBase>
+             </div>
+             </Grid>
+             <Grid xm={12} xs={1}></Grid>
+                
+            </Grid>
         )
     }
 

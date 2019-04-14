@@ -12,15 +12,15 @@ const theme = createMuiTheme({
 
     // Secondary color of orange
     secondary: {
-      light: '#b2fef7',
-      main: '#80cbc4',
-      dark: '#4f9a94',
+      light: '#e7ff8c',
+      main: '#0277bc',
+      dark: '#004c8b',
       contrastText: '#fff',
     },
 
     error: {
-      light: '#b00020',
-      main: '#b00020',
+      light: '#58a5ef',
+      main: '#0277bc',
       dark:  '#b00020', 
       contrastText: '#fff'
     },
