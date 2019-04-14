@@ -3,6 +3,7 @@ import { CardElement, injectStripe } from 'react-stripe-elements';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import defaultStyles from '../Theme/styles';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   ...defaultStyles(theme),
@@ -11,6 +12,7 @@ class CheckoutForm extends Component {
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
+    
   }
 
   async submit(ev) {
@@ -49,4 +51,8 @@ onClose = () => {
   }
 }
 
-export default withStyles(styles)(injectStripe(CheckoutForm));
+const mapStateToProps = state => ({
+  userID: state.login.userID,
+})
+
+export default connect(mapStateToProps, {})(withStyles(styles)(CheckoutForm));
