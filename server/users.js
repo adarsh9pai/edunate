@@ -21,7 +21,7 @@ users.get('/exists',(request, response)=>{
             response.json({message : false});
         }
     }).catch((error)=>{
-        response.json({message : "Error. Try again later."});
+        response.json({message :error.message });
     })
 })
 
@@ -36,7 +36,7 @@ users.get('/get',(request, response)=>{
             response.json({message : "Failure. User not found."});
         }
     }).catch((error)=>{
-        response.json({message : "Error. Try again later."});
+        response.json({message : error.message});
         console.log(error.message);
     })    
 })
@@ -58,7 +58,7 @@ users.post('/add', (request, response)=>{
     description : "user has been added."})
     })
     .catch((error)=>{
-        response.json({message : "Failure. Try again later."});
+        response.json({message : error.message });
     });
 })
 
