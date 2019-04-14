@@ -74,10 +74,10 @@ barter.get('/getall', (request, response) => {
 
     let collection = fStore.collection("Barter");
     let result = [];
-	
+
     collection.get().then((barters) => {
         barters.forEach((doc) => {
-		if(doc.data().user['displayName'] == request.query.displayName)
+		if((!request.query.displayName) || (doc.data().user['displayName'] == request.query.displayName))
 		{
 			result.push(doc.data());
 		}
