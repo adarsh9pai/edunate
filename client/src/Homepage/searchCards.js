@@ -166,5 +166,6 @@ Post.propTypes = {
   onEditClick: PropTypes.func,
   onExpand: PropTypes.func.isRequired,
 };
+
 const mapStateToProps = state => ({ bitmoji: state.login.bitmoji, userID: state.login.userID, displayName: state.login.displayName })
 export default connect(mapStateToProps, {})(withStyles(styles)(Post));
