@@ -1,24 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import classnames from "classnames";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Badge, Fab, Button, View } from "@material-ui/core";
+import { Badge, Fab, Button, Grid } from "@material-ui/core";
 import { Done, AttachMoney } from "@material-ui/icons";
-import NavigationIcon from '@material-ui/icons/Navigation';
 import Chip from '@material-ui/core/Chip';
 import { connect } from 'react-redux';
 import defaultStyles from '../Theme/styles';
@@ -76,7 +66,6 @@ const styles = theme => ({
   fab: {
     marginTop: theme.spacing.unit,
     width: '100%',
-    color: 'inherit',
   },
   checkMark: {
     backgroundColor: '#66bb6a',
@@ -102,7 +91,6 @@ class Post extends React.Component {
 
   render() {
     const { classes, post, bitmoji, onEditClick, onDonateClick } = this.props;
-    const { expanded } = this.state;
 
     return (
       <Badge
@@ -137,23 +125,38 @@ class Post extends React.Component {
             ))}
           </CardContent>
           <CardContent>
-              <Typography variant='h6' className={classes.bold}>Promise</Typography>
-              <Typography gutterBottom> {post.promise} </Typography>
+            {/* Promise */}
+            <Typography variant='h6' className={classes.bold}>Promise</Typography>
+            <Typography gutterBottom> {post.promise} </Typography>
 
-              <Typography gutterBottom>{`Posted ${post.datePosted}`}</Typography>
+            {/* Donators */}
+            <Typography variant='h6' className={classes.bold}>Donators</Typography>
+            <Grid container>
+              <Grid item xs={3} className={classes.formGridItem}>
+                <Avatar className={classes.avatar}>
+                  <img src={bitmoji} className={classes.bitmoji}></img>
+                </Avatar>
+              </Grid>
+              <Grid item xs={9} className={classes.formGridItem}>
+                <Typography className={classes.bold}>Imtiaz Khaled</Typography>
+                <Typography >Comment</Typography>
+              </Grid>
+            </Grid>
 
-              <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.fab} onClick={onDonateClick(post)}>
-                <AttachMoney className={classes.extendedIcon} />
-                Donate
+            <Typography gutterBottom>{`Posted ${post.datePosted}`}</Typography>
+
+            <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.fab} onClick={onDonateClick(post)}>
+              <AttachMoney className={classes.extendedIcon} />
+              Donate
               </Fab>
 
-              {
-                // Conditionally show the edit button if the current user is the one who posted this 
-                onEditClick 
-                  ? <Button color='primary' onClick={onEditClick(post)} className={classes.button}>Edit</Button>
-                  : null
-              }
-            </CardContent>
+            {
+              // Conditionally show the edit button if the current user is the one who posted this 
+              onEditClick
+                ? <Button color='primary' onClick={onEditClick(post)} className={classes.button}>Edit</Button>
+                : null
+            }
+          </CardContent>
         </Card>
       </Badge>
     );
