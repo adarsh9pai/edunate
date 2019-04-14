@@ -1,7 +1,12 @@
 import React, {Component} from 'react';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import defaultStyles from '../Theme/styles';
 
+const styles = theme => ({
+  ...defaultStyles(theme),
+})
 class CheckoutForm extends Component {
   constructor(props) {
     super(props);
@@ -11,6 +16,9 @@ class CheckoutForm extends Component {
   async submit(ev) {
     console.log("Purchase Complete!")
     let {token} = await this.props.stripe.createToken({name: "Name"});
+    if (!token)
+      return 
+
     let response = await fetch("http://localhost:3001/charge", {
       mode: 'no-cors',
       method: "POST",
@@ -19,19 +27,27 @@ class CheckoutForm extends Component {
     });
   
     if (response.ok) this.setState({complete: true});
+    this.props.onFinish();
+}
+
+onClose = () => {
+  this.props.onClose();
 }
   
 
   render() {
+    const { classes } = this.props;
 
     return (
       <div className="checkout">
-        <p>Would you like to complete the purchase?</p>
         <CardElement />
-        <Button onClick={this.submit}>Send</Button>
+        <div className={classes.buttonGroupRight}>
+          <Button onClick={this.onClose} className={classes.button}>Close</Button>
+          <Button color='primary' onClick={this.submit} className={classes.button}>Send</Button>
+        </div>
       </div>
     );
   }
 }
 
-export default injectStripe(CheckoutForm);
+export default withStyles(styles)(injectStripe(CheckoutForm));

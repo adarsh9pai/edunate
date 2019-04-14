@@ -27,18 +27,22 @@ import {Elements, StripeProvider} from 'react-stripe-elements';
 
 
 const styles = theme => ({
-  Payment: {
-    marginLeft: '43%',
-  },
-  PaymentCard: {
-    width: 700,
-    square: 'false',
-    marginLeft: '25%', 
-    backgroundColor: theme.palette.primary.light,
-  },
-  PaymentBox: {
-    margin: 10,
-    },
+  // Payment: {
+  //   marginLeft: '43%',
+  // },
+  // PaymentCard: {
+  //   width: 700,
+  //   square: 'false',
+  //   marginLeft: '25%', 
+  //   backgroundColor: theme.palette.primary.light,
+  // },
+  // PaymentBox: {
+  //   margin: 10,
+  //   },
+  container: {
+    marginTop: theme.spacing.unit * 2,
+    width: '100%',
+  }
 });
 
 class Payment extends React.Component {
@@ -47,16 +51,16 @@ class Payment extends React.Component {
     const { classes } = this.props;
     
     return (
-      <Paper className={classes.PaymentCard}>
+      <div className={classes.container}>
        <StripeProvider apiKey="pk_test_TYooMQauvdEDq54NiTphI7jx" >
          <div className={classes.PaymentBox}>
-           <h2 className={classes.Payment}>Payment</h2>
+           {/* <h2 className={classes.Payment}>Payment</h2> */}
            <Elements>
-             <CheckoutForm/>
+             <CheckoutForm onFinish={this.props.onFinish} onClose={this.props.onClose}/>
            </Elements>
          </div>
        </StripeProvider>
-      </Paper>
+      </div>
     );
   }
 }

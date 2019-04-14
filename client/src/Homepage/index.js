@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 // import { InlineDatePicker } from 'material-ui-pickers';
 import SnackBar from '../Components/snackbar';
 import { Request } from '../API/Request';
+import Payment from '../Payment/Payment';
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -38,12 +39,14 @@ class Homepage extends React.Component {
             trendingHashtags: [],
             isAddPostOpen: false,
             isEditPostOpen: false,
+            isPaymentOpen: false,
             requests: [],
             hashtags: [],
             barters: [],
             tag: '',
             selectedPost: null,
             selectedTag: '',
+            selectedPayment: null,
 
             confirmation: {
                 variant: null,
@@ -71,7 +74,7 @@ class Homepage extends React.Component {
     }
 
     handleClose = () => {
-        this.setState({ isAddPostOpen: false, isEditPostOpen: false });
+        this.setState({ isAddPostOpen: false, isEditPostOpen: false, isPaymentOpen: false, });
     }
 
     handleAddPostClick = () => {
@@ -166,6 +169,13 @@ class Homepage extends React.Component {
 
     }
 
+    handleDonateClick = post => () => {
+        this.setState({
+            isPaymentOpen: true,
+            selectedPayment: post,
+        })
+    }
+
     renderMyPosts = () => {
         const { classes, userID } = this.props;
         const { barters } = this.state;
@@ -177,7 +187,12 @@ class Homepage extends React.Component {
                 <Typography variant='h6' color='primary'>My Posts</Typography>
                 <Divider className={classes.marginTheme} />
                 <StackGrid columnWidth={350} gutterWidth={20} gutterHeight={20} gridRef={grid => this.grid = grid}>
-                    {userBarters.map((post, i) => <Post key={`post-${i}`} post={post} onEditClick={this.handleEditPostClick} onExpand={this.handlePostExpand}/>)}
+                    {userBarters.map((post, i) =>
+                        <Post key={`post-${i}`}
+                            post={post}
+                            onEditClick={this.handleEditPostClick}
+                            onExpand={this.handlePostExpand}
+                            onDonateClick={this.handleDonateClick} />)}
                 </StackGrid>
             </div>
         );
@@ -204,14 +219,19 @@ class Homepage extends React.Component {
 
         // Get only the posts that were posted within the last 3 days
         const recentPosts = barters.filter(barter => barter.hashtags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase() || !selectedTag))
-            .filter(barter => ((new Date()) - (new Date(barter.datePosted)))  / 1000 / 60 / 60 / 24 <  3)
+            .filter(barter => ((new Date()) - (new Date(barter.datePosted))) / 1000 / 60 / 60 / 24 < 3)
 
         return (
             <div className={classes.marginTheme}>
                 <Typography variant='h6' color='primary'>Recent Posts</Typography>
                 <Divider className={classes.marginTheme} />
                 <StackGrid columnWidth={350} gutterWidth={20} gutterHeight={20} gridRef={grid => this.grid = grid}>
-                    {recentPosts.map(post => <Post post={post}  onExpand={this.handlePostExpand}/>)}
+                    {recentPosts.map(post =>
+                        <Post
+                            post={post}
+                            onExpand={this.handlePostExpand}
+                            onDonateClick={this.handleDonateClick}
+                        />)}
                 </StackGrid>
             </div>
         );
@@ -379,6 +399,30 @@ class Homepage extends React.Component {
         )
     }
 
+    renderPaymentDialog = () => {
+        const { classes } = this.props;
+        const { isPaymentOpen } = this.state;
+
+        return (
+            <Dialog
+                open={isPaymentOpen}
+                onClose={this.handleClose}
+            >
+                <DialogTitle>Donate</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Thank you for helping this student out with supporting their way through college. 
+                        Your donations mean more than you think they do!
+                    </DialogContentText>
+
+                    <Grid container>
+                        <Payment onFinish={this.handleClose} onClose={this.handleClose}/>
+                    </Grid>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+
     renderSnackBar() {
         const { confirmation } = this.state;
 
@@ -407,6 +451,7 @@ class Homepage extends React.Component {
                     {this.renderEditPost()}
                     {this.renderAddButton()}
                     {this.renderSnackBar()}
+                    {this.renderPaymentDialog()}
                 </div>
             </div>
         );

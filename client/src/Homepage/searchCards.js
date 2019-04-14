@@ -101,7 +101,7 @@ class Post extends React.Component {
   };
 
   render() {
-    const { classes, post, bitmoji, onEditClick } = this.props;
+    const { classes, post, bitmoji, onEditClick, onDonateClick } = this.props;
     const { expanded } = this.state;
 
     return (
@@ -142,7 +142,7 @@ class Post extends React.Component {
 
               <Typography gutterBottom>{`Posted ${post.datePosted}`}</Typography>
 
-              <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
+              <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.fab} onClick={onDonateClick(post)}>
                 <AttachMoney className={classes.extendedIcon} />
                 Donate
               </Fab>
@@ -165,6 +165,7 @@ Post.propTypes = {
   post: PropTypes.object.isRequired,
   onEditClick: PropTypes.func,
   onExpand: PropTypes.func.isRequired,
+  onDonateClick: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({ bitmoji: state.login.bitmoji, userID: state.login.userID, displayName: state.login.displayName })
