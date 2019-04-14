@@ -5,6 +5,7 @@ import { Request } from './Request';
 
 export class Barter {
     constructor({id, user, received = [], datePosted, promise, hashtags, request, dateEnd = new Date(), isFulfilled}) {
+        console.log('in user', user);
         this.user = new User(user);
         this.received = received.map(receive => new Received(receive));
         this.datePosted = datePosted;
