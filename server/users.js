@@ -11,7 +11,7 @@ users.get('/',(request, response)=>{
     response.json({message : "users GET Endpoint"});
 })
 
-users.get('/doesUserExist',(request, response)=>{
+users.get('/exists',(request, response)=>{
     let document = fStore.collection("Users").doc(request.query.displayName);
     document.get().then((user)=>{
         if(user.exists){
@@ -25,7 +25,7 @@ users.get('/doesUserExist',(request, response)=>{
     })
 })
 
-users.get('/getUser',(request, response)=>{
+users.get('/get',(request, response)=>{
     let document = fStore.collection("Users").doc(request.query.displayName);
     document.get().then((user)=>{
         if(user.exists){
