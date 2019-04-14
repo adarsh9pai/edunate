@@ -167,5 +167,6 @@ Post.propTypes = {
   classes: PropTypes.object.isRequired, 
   post: PropTypes.object.isRequired,
 };
+
 const mapStateToProps = state => ({ bitmoji: state.login.bitmoji, userID: state.login.userID, displayName: state.login.displayName })
 export default connect(mapStateToProps, {})(withStyles(styles)(Post));

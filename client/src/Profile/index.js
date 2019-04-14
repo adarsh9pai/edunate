@@ -11,6 +11,9 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from '@material-ui/icons/Done';
+import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import { connect } from 'react-redux';
+
 
 
 const styles = theme => ({
@@ -25,6 +28,11 @@ const styles = theme => ({
       chipLabel: {
           fontSize: '1.5rem',
       },
+      logoutButton: {
+        margin: 10,
+        height: '100%',
+        width: '80%',
+      },
 });
 
 class Profile extends React.Component {
@@ -38,19 +46,27 @@ class Profile extends React.Component {
 
     //Logout functionality
     onLogoutClick = () => {
-
+      console.log('logged out');
+      
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, post, bitmoji, displayName } = this.props;    
 
         return (
             <div>
               <MenuAppBar title='Profile' />
                <div className={classes.root}> 
-                <Typography>bitmoji goes here</Typography>
-                 <Grid container >
-                   
+                <Grid container >
+
+                    {/* bitmoji */}
+
+                    <Grid item xs={12} sm={2} className={classes.formGridItem}></Grid>                       
+                    <Grid item xs={12} sm={8} className={classes.formGridItem}>
+                      <img src={bitmoji}></img>
+                    </Grid>                 
+                    <Grid item xs={12} sm={2} className={classes.formGridItem}></Grid> 
+
                     {/* Name and Age for the Profile page */}
 
                     <Grid item xs={12} sm={1} className={classes.formGridItem}></Grid>                   
@@ -59,7 +75,7 @@ class Profile extends React.Component {
                         disabled
                         id="outlined-disabled"
                         label="Full Name"
-                        defaultValue="Nahian Alam"
+                        defaultValue={displayName}
                         className={classes.textField}
                         margin="normal"
                         variant="outlined"
@@ -172,7 +188,10 @@ class Profile extends React.Component {
 
                     <Grid item xs={12} sm={10} className={classes.formGridItem}></Grid>                         
                     <Grid item xs={12} sm={2} className={classes.formGridItem}>
-                    <Button onClick={this.onLogoutClick} >Logout</Button>
+                      <Button onClick={this.onLogoutClick} variant="contained" color="secondary" className={classes.logoutButton}>
+                      <PowerSettingsNew className={classes.rightIcon} />
+                            Logout
+                      </Button>
                     </Grid>
                  </Grid>
                 </div>
@@ -182,7 +201,9 @@ class Profile extends React.Component {
 }
 
 Profile.propTypes = {
-    classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired, 
+  post: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Profile);
+const mapStateToProps = state => ({ bitmoji: state.login.bitmoji, userID: state.login.userID, displayName: state.login.displayName })
+export default connect(mapStateToProps, {})(withStyles(styles)(Profile));
