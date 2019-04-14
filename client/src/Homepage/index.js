@@ -18,6 +18,7 @@ import { Request } from '../API/Request';
 import Payment from '../Payment/Payment';
 import { getUser } from '../API/User';
 import { templates } from 'handlebars';
+import { Received } from '../API/Received';
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -113,6 +114,8 @@ class Homepage extends React.Component {
     handleUpdatePost = () => {
         const { user } = this.state;
 
+        console.log('received', this.state.received);
+
         updateBarter(new Barter({
             user,
             request: new Request(this.state),
@@ -180,16 +183,21 @@ class Homepage extends React.Component {
         this.setState({
             isPaymentOpen: true,
             selectedPayment: post,
-        })
+            ...post,
+            ...post.request,
+        });
     }
 
     handleFinishPayment = (comment) => {
-        console.log(comment);
+        const { bitmoji } = this.props;
         const { received, user } = this.state;
         const temp = received.slice();
+
+        console.log('user in finish payment', user, bitmoji);
         
         temp.push({
             ...user,
+            bitmoji,
             payment: '$1',
             frequency: 'One Time',
             comment: comment || '',
@@ -491,6 +499,7 @@ Homepage.propTypes = {
 
 const mapStateToProps = state => ({
     userID: state.login.userID,
+    bitmoji: state.login.bitmoji,
 })
 
 export default connect(mapStateToProps, {})(withStyles(styles)(Homepage));

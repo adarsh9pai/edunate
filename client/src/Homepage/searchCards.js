@@ -130,20 +130,33 @@ class Post extends React.Component {
             <Typography gutterBottom> {post.promise} </Typography>
 
             {/* Donators */}
-            <Typography variant='h6' className={classes.bold}>Donators</Typography>
-            <Grid container>
-              <Grid item xs={3} className={classes.formGridItem}>
-                <Avatar className={classes.avatar}>
-                  <img src={bitmoji} className={classes.bitmoji}></img>
-                </Avatar>
-              </Grid>
-              <Grid item xs={9} className={classes.formGridItem}>
-                <Typography className={classes.bold}>Imtiaz Khaled</Typography>
-                <Typography >Comment</Typography>
-              </Grid>
-            </Grid>
+           
+              {
+                // If there are no donators, then show that they should be the first to donate
+                post.received.length !== 0 
+                ? (
+                  <React.Fragment>
+                    <Typography variant='h6' className={classes.bold}>Donators</Typography>
+                    <Grid container>
+                      {post.received.map(user => (
+                        <React.Fragment>
+                          <Grid item xs={3} className={classes.formGridItem}>
+                            <Avatar className={classes.avatar}>
+                              <img src={user.bitmoji} className={classes.bitmoji}></img>
+                            </Avatar>
+                          </Grid>
+                          <Grid item xs={9} className={classes.formGridItem}>
+                          <Typography className={classes.bold}>{user.fullName}</Typography>
+                          <Typography >{user.comment}</Typography>
+                        </Grid>
+                      </React.Fragment>
+                      ))}
+                    </Grid>
+                  </React.Fragment>
+                ): <Typography variant='h6' className={classes.bold}>Be the first to donate! </Typography>
+              }
 
-            <Typography gutterBottom>{`Posted ${post.datePosted}`}</Typography>
+            <Typography gutterBottom className={classes.formGridItem}>{`Posted ${post.datePosted}`}</Typography>
 
             <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.fab} onClick={onDonateClick(post)}>
               <AttachMoney className={classes.extendedIcon} />
