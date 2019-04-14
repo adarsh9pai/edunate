@@ -47,7 +47,7 @@ const styles = theme => ({
     transform: "rotate(180deg)"
   },
   avatar: {
-    backgroundColor: red[500]
+    backgroundColor: red[500],
   },
   fullfilled: {
     margin: "auto 0",
@@ -72,6 +72,9 @@ const styles = theme => ({
     marginLeft: '30%',
     margin: 10,
   },
+  checkMark: {
+    backgroundColor: '#66bb6a',
+  },
 });
 
 class Post extends React.Component {
@@ -90,7 +93,7 @@ class Post extends React.Component {
         className={classes.badge}
         classes={{ badge: classes.badgeAvatar }}
         badgeContent={
-          <Avatar>
+          <Avatar className={classes.checkMark}>
             <Done />
           </Avatar>
         }
