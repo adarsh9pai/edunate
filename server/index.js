@@ -73,28 +73,30 @@ app.listen(PORT, (request, response)=>{
 })
 
 app.post('/charge', async(request, response)=>{
+  console.log(request.body);
+  let account = '';
   try{
     let {status} = await stripe.charges.create({
-      amount : 2,
+      amount : 300,
       currency : "usd",
       description : 'example',
       source : request.body
     });
-
-    response.json({status});
-
-    stripe.payouts.create({
-      amount : 2,
-      currency : "usd",
-      receipient: "cus_Esn19pWQXltIJk",
-      card: '4242424242424242',
-      statement_descriptor: "sample"
-    },
-    (error, payout)=>{
-      console.log("payout or error");
+    /*
+    stripe.accounts.create({
+      country: "US",
+      type: "custom",
+      account_token : request.body.token,
+      requested_capabilities: ['card_payments']
+    }).then((acc)=>{
+      console.log(acc);
+      account = acc.id;
     });
+    */
+    response.json({status});
   }
   catch(error){
+    console.log(error.message);
     response.status(500).end();
   }
 })
