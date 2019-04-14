@@ -40,11 +40,24 @@ class Login extends React.Component {
         }
     }
 
+    componentDidMount = () => {
+        const { location } = this.props;
+
+        const params = new URLSearchParams(location.search);
+        const isLoggedIn = params.get('loggedIn') === 'true';
+        const isNewUser = params.get('newUser') === 'true';
+
+        if (isLoggedIn && isNewUser)
+            this.props.history.push('/newProfile');
+        else if (isLoggedIn && !isNewUser)
+            this.props.history.push('/homepage');
+    }
+
     handleSnapChatLogin = () => {
         // Call Snapchat API stuff
 
         // Navigate on success to account creation or homepage based if they have logged in before
-        this.props.history.push('/homepage');
+        this.props.history.push('http://localhost:3001');
     }
 
     renderLogin = () => {
@@ -57,7 +70,8 @@ class Login extends React.Component {
                 </div>
                 <Typography variant='h4' align='center'>Edunate</Typography>
 
-                <div id="my-login-button-target" />
+                {/* <div id="my-login-button-target" /> */}
+                <a href="http://localhost:3001/login">Login with Snapchat</a>
             </Paper>
         )
     }

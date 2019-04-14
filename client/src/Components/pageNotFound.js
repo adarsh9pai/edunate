@@ -7,6 +7,9 @@ import { NavLink } from 'react-router-dom';
 import MenuAppBar from './appBar';
 
 const styles = theme => ({
+    root: {
+        marginTop: 64 + theme.spacing.unit * 3,
+    },
     top: {
         display: 'grid',
     },
@@ -29,29 +32,29 @@ class PageNotFound extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
+            <div>
                 <MenuAppBar title='' />
 
-                <div className={classes.top}>
-                    <div className={classes.center}>
-                        <Typography className={classes.oops}>OOPS!</Typography>
-                    </div>
+                <div className={classes.root}>
+                    <div className={classes.top}>
+                        <div className={classes.center}>
+                            <Typography className={classes.oops}>OOPS!</Typography>
+                        </div>
 
-                    <div className={classes.center}>
-                        <Typography className={classes.pageNotFound}>PAGE NOT FOUND</Typography>
-                    </div>
+                        <div className={classes.center}>
+                            <Typography className={classes.pageNotFound}>PAGE NOT FOUND</Typography>
+                        </div>
 
-                    <div className={classes.center}>
-                        <NavLink to='/homepage' className={classes.link}>
-                            <Button color='primary' variant='extendedFab' className={classes.returnBtn}>
-                                <Home />
-                                Return to Homepage
+                        <div className={classes.center}>
+                            <NavLink to='/homepage' className={classes.link}>
+                                <Button color='primary' variant='extendedFab' className={classes.returnBtn}>
+                                    <Home />
+                                    Return to Homepage
                             </Button>
-                        </NavLink>
+                            </NavLink>
 
+                        </div>
                     </div>
-
-
                 </div>
             </div>
         );
