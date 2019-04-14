@@ -112,28 +112,21 @@ class Homepage extends React.Component {
 
     renderMyPosts = () => {
         const { classes } = this.props;
+        const { barters } = this.state;
 
         return (
             <div className={classes.marginTheme}>
                 <Typography variant='h6' color='primary'>My Posts</Typography>
                 <Divider className={classes.marginTheme} />
                 <StackGrid columnWidth={350} gutterWidth={20} gutterHeight={20}>
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
-                    <Post />
+                    {barters.map((post, i) => <Post key={`post-${i}`} post={post}/>)}
                 </StackGrid>
             </div>
         );
     }
 
     renderTrendingHashtags = () => {
-        const { classes } = this.props;
+        const { classes } =     this.props;
         const { trendingHashtags } = this.state;
 
         return (

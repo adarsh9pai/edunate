@@ -20,6 +20,7 @@ import { Badge, Fab, Button, View } from "@material-ui/core";
 import { Done, AttachMoney } from "@material-ui/icons";
 import NavigationIcon from '@material-ui/icons/Navigation';
 import Chip from '@material-ui/core/Chip';
+import { connect } from 'react-redux';
 
 
 
@@ -87,7 +88,7 @@ class Post extends React.Component {
   };
   
   render() {
-    const { classes } = this.props;
+    const { classes, post, bitmoji, displayName } = this.props;
     const { expanded } = this.state;
 
     return (
@@ -95,7 +96,7 @@ class Post extends React.Component {
         className={classes.badge}
         classes={{ badge: classes.badgeAvatar }}
         badgeContent={
-          <Avatar className={classes.checkMark}>
+            <Avatar className={classes.checkMark}>
             <Done />
           </Avatar>
         }
@@ -104,24 +105,23 @@ class Post extends React.Component {
           <CardHeader
             avatar={
               <Avatar aria-label="Recipe" className={classes.avatar}>
-                bit
+                <img src={bitmoji}></img>
               </Avatar>
             }
-            title="name" //user.displayName
-            subheader="type" //request.type[]
+            title={displayName} //user.displayName
+            subheader={post.request.type}
           />
           <CardContent className={classes.title}>
-            <Typography>Title</Typography>
+            <Typography>{post.request.title}</Typography>
             <Typography component="p">
-              request.title {/*user.title*/},
+              {post.request.description},
             </Typography>
           </CardContent>
           <CardContent>
-            <Chip label="Computer Science" className={classes.chip} variant="outlined" />
-            <Chip label="Giving" className={classes.chip} variant="outlined" />
-            <Chip label="Charity" className={classes.chip} variant="outlined" />
-            <Chip label="Robert" className={classes.chip} variant="outlined" />
-          </CardContent>
+            {post.hashtags.map((hashtag,i) => (
+                <Chip key={`hashtag-${i}`} label={hashtag} className={classes.chip} variant="outlined" /> 
+             ) )}
+            </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
             <Typography>{expanded ? 'View Less' : 'View More'}</Typography>
             <IconButton
@@ -138,16 +138,16 @@ class Post extends React.Component {
           <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
             <CardContent>
               <Typography paragraph>
-                request.description {/*user.description*/},
+                {post.request.description}
               </Typography>
               <Typography paragraph>
-                promise {/*user.description*/},
+                {post.promise}
               </Typography>
               <Typography paragraph>
-                request.datePosted {/*request.datePosted*/},
+                {post.datePosted}
               </Typography>
               <Typography paragraph>
-                request.dateEnd {/*request.dateEnd*/},
+                {post.dateEnd}
               </Typography>
               <Fab color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
                 <AttachMoney className={classes.extendedIcon} />
@@ -162,7 +162,8 @@ class Post extends React.Component {
 }
 
 Post.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired, 
+  post: PropTypes.object.isRequired,
 };
-
-export default withStyles(styles)(Post);
+const mapStateToProps = state => ({ bitmoji: state.login.bitmoji, userID: state.login.userID, displayName: state.login.displayName })
+export default connect(mapStateToProps, {})(withStyles(styles)(Post));
