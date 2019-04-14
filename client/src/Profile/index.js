@@ -36,6 +36,11 @@ class Profile extends React.Component {
         }
     }
 
+    //Logout functionality
+    onLogoutClick = () => {
+
+    }
+
     render() {
         const { classes } = this.props;
 
@@ -163,7 +168,12 @@ class Profile extends React.Component {
                     <Grid item xs={12} sm={9} className={classes.formGridItem}></Grid>   
                     <Grid item xs={12} sm={1} className={classes.formGridItem}></Grid>     
                
+                    {/* Logout button, at the end of the page */}
 
+                    <Grid item xs={12} sm={10} className={classes.formGridItem}></Grid>                         
+                    <Grid item xs={12} sm={2} className={classes.formGridItem}>
+                    <Button onClick={this.onLogoutClick} >Logout</Button>
+                    </Grid>
                  </Grid>
                 </div>
             </div>
