@@ -20,6 +20,7 @@ class CheckoutForm extends Component {
   async submit(ev) {
     console.log("Purchase Complete!")
     let { token } = await this.props.stripe.createToken({ name: "Name" });
+
     if (!token)
       return
 

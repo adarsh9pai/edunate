@@ -26,6 +26,7 @@ import {Elements, StripeProvider} from 'react-stripe-elements';
 
 
 
+
 const styles = theme => ({
   // Payment: {
   //   marginLeft: '43%',
@@ -52,7 +53,7 @@ class Payment extends React.Component {
     
     return (
       <div className={classes.container}>
-       <StripeProvider apiKey="pk_test_TYooMQauvdEDq54NiTphI7jx" >
+       <StripeProvider apiKey='pk_test_r7do0ha1xg9fbTAdetJpLFYT00YYkNGBRK' >
          <div className={classes.PaymentBox}>
            {/* <h2 className={classes.Payment}>Payment</h2> */}
            <Elements>
@@ -65,4 +66,8 @@ class Payment extends React.Component {
   }
 }
 
-export default withStyles(styles)(Payment);
+const mapStateToProps = state => ({
+  userID: state.login.userID,
+})
+
+export default connect(mapStateToProps, {})(withStyles(styles)(Payment));
