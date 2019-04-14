@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper, Grid, Fab, Typography } from '@material-ui/core';
+import { Paper, Grid, ButtonBase, Typography } from '@material-ui/core';
 import MenuAppBar from '../Components/appBar';
 import defaultStyles from '../Theme/styles';
-import classnames from 'classnames';
+import { connect } from 'react-redux';
+import { login, setUserName } from '../Actions/loginActions';
+import { getUser } from '../API/User';
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -29,6 +31,18 @@ const styles = theme => ({
         margin: '0 auto',
         width: '50%',
     },
+    aButton: {
+        padding: theme.spacing.unit * 3,
+        background: theme.palette.primary.main,
+        margin: theme.spacing.unit * 2,
+        borderRadius: theme.spacing.unit * 1.5,
+        margin: '0 auto',
+        width: '50%',
+    },
+    aLink: {
+        textDecoration: 'none',
+        color: 'inherit',
+    },
 });
 
 class Login extends React.Component {
@@ -40,17 +54,26 @@ class Login extends React.Component {
         }
     }
 
-    componentDidMount = () => {
-        const { location } = this.props;
+    componentDidMount = async () => {
+        const { location, login, setUserName } = this.props;
 
         const params = new URLSearchParams(location.search);
         const isLoggedIn = params.get('loggedIn') === 'true';
         const isNewUser = params.get('newUser') === 'true';
+        const bitmoji = params.get('bitmoji');
+        const userID = params.get('id');
 
-        if (isLoggedIn && isNewUser)
+        console.log('isLoggedIn', isLoggedIn, 'isNewUser', isNewUser, 'bitmoji', bitmoji, 'userID', userID);
+
+        if (isLoggedIn && isNewUser) {
+            setUserName(userID, bitmoji);
             this.props.history.push('/newProfile');
-        else if (isLoggedIn && !isNewUser)
+        }
+        else if (isLoggedIn && !isNewUser) {
+            const user = await getUser(userID);
+            login(user);
             this.props.history.push('/homepage');
+        }
     }
 
     handleSnapChatLogin = () => {
@@ -70,8 +93,11 @@ class Login extends React.Component {
                 </div>
                 <Typography variant='h4' align='center'>Edunate</Typography>
 
-                {/* <div id="my-login-button-target" /> */}
-                <a href="http://localhost:3001/login">Login with Snapchat</a>
+                <div className={classes.centerDiv}>
+                    <ButtonBase className={classes.aButton}>
+                        <a href="http://localhost:3001/login" className={classes.aLink}>LOGIN WITH SNAPCHAT</a>
+                    </ButtonBase>
+                </div>
             </Paper>
         )
     }
@@ -92,6 +118,12 @@ class Login extends React.Component {
 
 Login.propTypes = {
     classes: PropTypes.object.isRequired,
+    login: PropTypes.func.isRequired,
+    setUserName: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Login);
+const mapStateToProps = state => ({
+
+})
+
+export default connect(mapStateToProps, { login, setUserName })(withStyles(styles)(Login));
