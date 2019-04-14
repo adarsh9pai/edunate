@@ -1,26 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper, Grid, Fab } from '@material-ui/core';
+import { Paper, Grid, Fab, Typography } from '@material-ui/core';
 import MenuAppBar from '../Components/appBar';
 import defaultStyles from '../Theme/styles';
+import classnames from 'classnames';
 
 const styles = theme => ({
     ...defaultStyles(theme),
     logo: {
-        marginLeft: '48%',
         height: 100,
         width: 100,
-        margin: 'auto 0',
+        marginLeft: 20,
     },
     fab: {
         backgroundColor: '#FFFC00',
         fontWeight: 'bold',
-        margin: 'auto 0',
-        marginLeft: '45%',
     },
     grow: {
         flexGrow: 1,
+    },
+    paper: {
+        maxWidth: 300,
+        margin: '0 auto',
+        marginTop: 100,
+    },
+    centerDiv: {
+        margin: '0 auto',
+        width: '50%',
     },
 });
 
@@ -44,13 +51,13 @@ class Login extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Paper>
-                <img src='logo.png' alt='Edunote Logo' className={classes.logo} />
-                <Grid>
-                    <Fab variant="extended" aria-label="Delete" className={classes.fab} onClick={this.handleSnapChatLogin}>
-                        Login with Snapchat
-                </Fab>
-                </Grid>
+            <Paper className={classes.paper}>
+                <div className={classes.centerDiv}>
+                    <img src='logo.png' alt='Edunote Logo' className={classes.logo} />
+                </div>
+                <Typography variant='h4' align='center'>Edunate</Typography>
+
+                <div id="my-login-button-target" />
             </Paper>
         )
     }

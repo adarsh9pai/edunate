@@ -4,7 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, IconButton, Typography, Button, Paper, Grid, Fab } from '@material-ui/core';
 import { AccountCircle, Menu } from '@material-ui/icons';
 import MenuAppBar from '../Components/appBar';
+import Post from './searchCards';
 import defaultStyles from '../Theme/styles';
+
+
 
 const styles = theme => ({
     ...defaultStyles(theme),
@@ -38,9 +41,11 @@ class Homepage extends React.Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div >
                 <MenuAppBar title='Homepage' />
-                
+                <div className={classes.root}>
+                    <Post />
+                </div>   
             </div>
         );
     }
