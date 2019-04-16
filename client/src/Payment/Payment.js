@@ -23,7 +23,7 @@ import Chip from '@material-ui/core/Chip';
 import { connect } from 'react-redux';
 import CheckoutForm from './CheckoutForm';
 import {Elements, StripeProvider} from 'react-stripe-elements';
-
+const configFile = require('../config');
 
 
 
@@ -53,7 +53,7 @@ class Payment extends React.Component {
     
     return (
       <div className={classes.container}>
-       <StripeProvider apiKey='pk_test_r7do0ha1xg9fbTAdetJpLFYT00YYkNGBRK' >
+       <StripeProvider apiKey= {configFile.publishable_key} >
          <div className={classes.PaymentBox}>
            {/* <h2 className={classes.Payment}>Payment</h2> */}
            <Elements>
