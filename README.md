@@ -5,6 +5,7 @@
 We came into the hackathon wanting to solve an actual problem college students face throughout the world. One thing we observed was that lack of money is one of the biggest reasons college students either don't achieve their goals or makes them hesistant towards risks. We wanted to solve that. Some things that motivated us towards this goal - 
 
 [1] : ABC News: https://abc13.com/education/tsu-students-use-hash-tag-to-shed-light-on-problems-on-campus/991459/
+
 [2] : Subscription fees for Adobe's Creative Cloud, LeetCode etc.
 
 
